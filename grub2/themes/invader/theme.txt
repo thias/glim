@@ -1,0 +1,36 @@
+# GRUB gfxmenu theme "invader".
+
+title-text: ""
+desktop-color: "#000"
+
++ boot_menu {
+    top = 20
+    left = 20
+    width = 100%-40
+    height = 100%-50
+    item_color = "#F33"
+    selected_item_color = "#FFF"
+    item_height = 24
+    icon_width = 24
+    icon_height = 24
+    item_padding = 2
+    item_icon_space = 4
+    item_spacing = 4
+}
+
++ image {
+    top = 20
+    left = 100%-240
+    file="invader-220x160.png"
+}
+
++ label {
+    top = 100%-30
+    left = 0
+    width = 100%
+    height = 20
+    color = "#F33"
+    align = "center"
+    text = "Swiss USB - http://matthias.saou.eu/ - v2.1 10/2012"
+}
+

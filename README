@@ -1,0 +1,27 @@
+Install GRUB2 to the USB device's MBR
+
+# grub2-install --force --boot-directory=/run/media/dude/DT200/boot /dev/sdd
+
+Copy over the grub.cfg file as well as the theme it uses
+
+# rsync -avP grub2/ /run/media/dude/DT200/boot/grub2
+
+Now create and populate the boot/files/ and iso/ directories. Example :
+
+/mnt/boot/files:
+sysrescd
+
+/mnt/iso:
+gparted-live-0.14.0-1.iso
+ipxe.iso
+rhel-server-6.3-x86_64-boot.iso
+systemrescuecd-x86-3.0.0.iso
+ubuntu-12.04-desktop-amd64.iso
+ubuntu-12.04-desktop-i386.iso
+
+For Fedora Live ISOs to work without extracting their content, see :
+https://bugzilla.redhat.com/show_bug.cgi?id=650672
+https://gist.github.com/2132076
+
+./fedora-fromiso /mnt/iso/Fedora-17-i686-Live-Desktop.iso /mnt/boot/files/Fedora-17-i686-initrd.img
+
