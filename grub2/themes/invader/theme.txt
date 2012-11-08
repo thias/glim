@@ -1,7 +1,7 @@
 # GRUB gfxmenu theme "invader".
 
 desktop-color: "#000"
-#terminal-box: "terminal_*.png"
+terminal-box: "terminal_box_*.png"
 
 + boot_menu {
     item_color = "#F33"
