@@ -1,6 +1,15 @@
+GLEE USB GRUB2 Multi-Boot
+=========================
+
+The following instructions assume your USB drive is mounted on /mnt, so adjust
+accordingly. My experience has been that the safest filesystem to use is FAT32
+(surprisingly!), though it will mean that ISO images greater than 4GB won't be
+supported.
+
+
 Install GRUB2 to the USB device's MBR :
 
-grub2-install --force --boot-directory=/run/media/dude/DT200/boot /dev/sdd
+grub2-install --boot-directory=/mnt/boot /dev/sdd
 
 Errors and solutions :
  * "source_dir doesn't exist. Please specify --target or --directory"
@@ -11,30 +20,42 @@ Errors and solutions :
 
 Copy over the grub.cfg file as well as the theme it uses :
 
-rsync -avP grub2/ /run/media/dude/DT200/boot/grub2
+rsync -avP grub2/ /mnt/boot/grub2
 
 
-Now create and populate the boot/files/ and iso/ directories. Example :
+Now create and populate the /mnt/boot/iso/ sub-directories. Example :
 
-/mnt/boot/files:
-sysrescd
+iso/gparted:
+ gparted-live-0.14.0-1.iso
+iso/ipxe:
+ ipxe.iso
+iso/sysrescd:
+ systemrescuecd-x86-3.0.0.iso
+iso/ubuntu:
+ ubuntu-12.04.1-desktop-amd64.iso
+ ubuntu-12.04.1-desktop-i386.iso
+ ubuntu-12.10-desktop-amd64.iso
+ ubuntu-12.10-desktop-i386.iso
 
-/mnt/iso:
-gparted-live-0.14.0-1.iso
-ipxe.iso
-rhel-server-6.3-x86_64-boot.iso
-systemrescuecd-x86-3.0.0.iso
-ubuntu-12.04-desktop-amd64.iso
-ubuntu-12.04-desktop-i386.iso
+The supported sub-directories are :
+arch debian fedora gparted ipxe knoppix linuxmint rhel sysrescd ubuntu
 
-For Fedora Live ISOs to work without extracting their content, see :
+Any missing sub-directory will have the matching boot menu entry automatically
+disabled, so to skip any distribution(s), just don't create its directory.
+
+If you require different versions, or just part of a distributions, edit the
+appropriate inc-*.cfg file.
+
+Note that on 32bit computers, all 64bit entries will be automatically disabled.
+
+Fedora Live ISOs require a patched initrd to work (still as of Fedora 17) :
 https://bugzilla.redhat.com/show_bug.cgi?id=650672
 https://gist.github.com/2132076
 
-As root (for the loopback mount to work) :
+To create the required initrd files (about 15MB each), as root :
 
-./fedora-fromiso /mnt/iso/Fedora-17-i686-Live-Desktop.iso /mnt/boot/files/Fedora-17-i686-initrd.img
-./fedora-fromiso /mnt/iso/Fedora-17-x86_64-Live-Desktop.iso /mnt/boot/files/Fedora-17-x86_64-initrd.img
+./fedora-fromiso /mnt/boot/iso/fedora/Fedora-17-i686-Live-Desktop.iso /mnt/boot/iso/fedora/Fedora-17-i686-initrd.img
+./fedora-fromiso /mnt/boot/iso/fedora/Fedora-17-x86_64-Live-Desktop.iso /mnt/boot/iso/fedora/Fedora-17-x86_64-initrd.img
 
 
 Test your bootable GRUB2 USB memory :
@@ -44,4 +65,22 @@ an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
 17), that way you can easily and quickly test changes.
 Make sure you unmount the disk from the host OS before you start the KVM
 virtual machine that uses it.
+
+
+If you have any problem to boot, for instance stuck at the GRUB prompt before
+the menu, try running grub-install again.
+If you have other exotic GRUB errors, try formatting your USB memory with a
+different filesystem. I've had the most luck with FAT32...
+
+
+--
+Copyleft 2012 Matthias Saou <matthias@saou.eu>
+
+All configuration files included are public domain. Do what you want with them.
+The invader logo was made by me, so unless the exact shape is covered by
+copyright somewhere, do what you want with it.
+The terminal_box_*.png files are CC-BY-SA-3.0 and come from the GRUB2 starfield
+theme by Daniel Tschudi.
+The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
+as well as the source code, see http://www.gnu.org/software/grub/
 
