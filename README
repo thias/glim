@@ -31,7 +31,10 @@ For Fedora Live ISOs to work without extracting their content, see :
 https://bugzilla.redhat.com/show_bug.cgi?id=650672
 https://gist.github.com/2132076
 
+As root (for the loopback mount to work) :
+
 ./fedora-fromiso /mnt/iso/Fedora-17-i686-Live-Desktop.iso /mnt/boot/files/Fedora-17-i686-initrd.img
+./fedora-fromiso /mnt/iso/Fedora-17-x86_64-Live-Desktop.iso /mnt/boot/files/Fedora-17-x86_64-initrd.img
 
 
 Test your bootable GRUB2 USB memory :
