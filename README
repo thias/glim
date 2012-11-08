@@ -1,10 +1,18 @@
-Install GRUB2 to the USB device's MBR
+Install GRUB2 to the USB device's MBR :
 
-# grub2-install --force --boot-directory=/run/media/dude/DT200/boot /dev/sdd
+grub2-install --force --boot-directory=/run/media/dude/DT200/boot /dev/sdd
 
-Copy over the grub.cfg file as well as the theme it uses
+Errors and solutions :
+ * "source_dir doesn't exist. Please specify --target or --directory"
+   Find your grub2 directory and specify it. Example :
+   --directory=/usr/lib/grub/i386-pc
+ * --force : If your partitions start at 63 instead of more, such as 2048
 
-# rsync -avP grub2/ /run/media/dude/DT200/boot/grub2
+
+Copy over the grub.cfg file as well as the theme it uses :
+
+rsync -avP grub2/ /run/media/dude/DT200/boot/grub2
+
 
 Now create and populate the boot/files/ and iso/ directories. Example :
 
@@ -24,4 +32,13 @@ https://bugzilla.redhat.com/show_bug.cgi?id=650672
 https://gist.github.com/2132076
 
 ./fedora-fromiso /mnt/iso/Fedora-17-i686-Live-Desktop.iso /mnt/boot/files/Fedora-17-i686-initrd.img
+
+
+Test your bootable GRUB2 USB memory :
+
+With KVM it should "just work". The /dev/sdx device should be configured as
+an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
+17), that way you can easily and quickly test changes.
+Make sure you unmount the disk from the host OS before you start the KVM
+virtual machine that uses it.
 
