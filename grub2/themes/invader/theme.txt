@@ -25,7 +25,17 @@ terminal-box: "terminal_box_*.png"
 }
 
 + label {
-    text = "Swiss USB - http://matthias.saou.eu/ - v2.2 11/2012"
+    text = "'Up', 'Down', 'Enter', 'Esc' to navigate, 'e' to edit options"
+    color = "#FFF"
+    align = center
+    top = 100%-54
+    left = 0
+    width = 100%
+    height = 20
+}
+
++ label {
+    text = "GLEE USB - http://matthias.saou.eu/ - v2.3 11/2012"
     color = "#FFF"
     align = center
     top = 100%-30
