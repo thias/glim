@@ -59,6 +59,11 @@ To create the required initrd files (about 15MB each), as root :
 ./fedora-fromiso /mnt/boot/iso/fedora/Fedora-17-x86_64-Live-Desktop.iso /mnt/boot/iso/fedora/Fedora-17-x86_64-initrd.img
 
 
+Red Hat Enterprise Linux isn't "live" as such. And in order for the install to
+work, you need to also copy the "images" directory from the DVD next to the DVD
+ISO, and keep only "install.img" and "product.img".
+
+
 Test your bootable GRUB2 USB memory :
 
 With KVM it should "just work". The /dev/sdx device should be configured as
