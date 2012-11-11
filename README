@@ -4,7 +4,8 @@ GLEE USB GRUB2 Multi-Boot
 The following instructions assume your USB drive is mounted on /mnt, so adjust
 accordingly. My experience has been that the safest filesystem to use is FAT32
 (surprisingly!), though it will mean that ISO images greater than 4GB won't be
-supported.
+supported. NTFS works, but the installer of distributions such as Fedora can't
+read it, so they won't work.
 
 
 Install GRUB2 to the USB device's MBR :
@@ -38,7 +39,7 @@ iso/ubuntu:
  ubuntu-12.10-desktop-i386.iso
 
 The supported sub-directories are :
-arch debian fedora gparted ipxe knoppix linuxmint rhel sysrescd ubuntu
+arch debian fedora gparted grml ipxe knoppix linuxmint pmagic rhel sysrescd ubuntu
 
 Any missing sub-directory will have the matching boot menu entry automatically
 disabled, so to skip any distribution(s), just don't create its directory.
