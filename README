@@ -1,5 +1,7 @@
-GLEE USB GRUB2 Multi-Boot
-=========================
+GRUB2 Live ISO Multiboot
+========================
+
+http://glee.thias.es/GLIM
 
 The following instructions assume your USB drive is mounted on /mnt, so adjust
 accordingly. My experience has been that the safest filesystem to use is FAT32
