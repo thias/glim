@@ -7,10 +7,17 @@ accordingly. My experience has been that the safest filesystem to use is FAT32
 supported. NTFS works, but the installer of distributions such as Fedora can't
 read it, so they won't work.
 
+All instructions require you to be root.
+
+Set the variable we'll use in examples :
+
+export USBDRIVE=/mnt
 
 Install GRUB2 to the USB device's MBR :
 
-grub2-install --boot-directory=/mnt/boot /dev/sdd
+grub2-install --boot-directory=$USBDRIVE/boot /dev/sdx
+ -or- (Ubuntu, for instance)
+grub-install --boot-directory=$USBDRIVE/boot /dev/sdx
 
 Errors and solutions :
  * "source_dir doesn't exist. Please specify --target or --directory"
@@ -21,10 +28,10 @@ Errors and solutions :
 
 Copy over the grub.cfg file as well as the theme it uses :
 
-rsync -avP grub2/ /mnt/boot/grub2
+rsync -avP grub2/ $USBDRIVE/boot/grub2
 
 
-Now create and populate the /mnt/boot/iso/ sub-directories. Example :
+Now create and populate the $USBDRIVE/boot/iso/ sub-directories. Example :
 
 iso/gparted:
  gparted-live-0.14.0-1.iso
@@ -55,8 +62,8 @@ https://gist.github.com/2132076
 
 To create the required initrd files (about 15MB each), as root :
 
-./fedora-fromiso /mnt/boot/iso/fedora/Fedora-17-i686-Live-Desktop.iso /mnt/boot/iso/fedora/Fedora-17-i686-initrd.img
-./fedora-fromiso /mnt/boot/iso/fedora/Fedora-17-x86_64-Live-Desktop.iso /mnt/boot/iso/fedora/Fedora-17-x86_64-initrd.img
+./fedora-fromiso $USBDRIVE/boot/iso/fedora/Fedora-17-i686-Live-Desktop.iso $USBDRIVE/boot/iso/fedora/Fedora-17-i686-initrd.img
+./fedora-fromiso $USBDRIVE/boot/iso/fedora/Fedora-17-x86_64-Live-Desktop.iso $USBDRIVE/boot/iso/fedora/Fedora-17-x86_64-initrd.img
 
 
 Red Hat Enterprise Linux isn't "live" as such. And in order for the install to
