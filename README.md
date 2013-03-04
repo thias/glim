@@ -1,7 +1,7 @@
 GRUB2 Live ISO Multiboot
 ========================
 
-http://github.com/thias | http://glee.thias.es/GLIM
+http://github.com/thias/glim | http://glee.thias.es/GLIM
 
 Overview
 --------
@@ -31,19 +31,18 @@ Installation
 
 Setting up GRUB require you to be root, while the rest doesn't.
 
-Set the USBMNT variable so that copy/pasting examples will work
-(replace /mnt and sdb with the appropriate values) :
+Set the `USBMNT` variable so that copy/pasting examples will work
+(replace `/mnt` and `sdb` with the appropriate values) :
 
     export USBMNT=/mnt
     export USBDEV=sdb
 
-Preliminary steps :
+Preliminary steps (usually already completed on a newly purchased USB memory) :
 
  * Create a single primary MSDOS partition on your USB memory.
  * Format that partition as FAT32
 
-Next, install GRUB2 to the USB device's MBR, and onto the new filesystem
-(replace sdx with the proper device) :
+Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -51,32 +50,33 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
-Errors and solutions :
+If you get the following message :
 
     source_dir doesn't exist. Please specify --target or --directory
 
-Find your grub2 directory and specify it. Example :
+Just find your grub2 directory and specify it as asked. Example :
 
     grub2-install --directory=/usr/lib/grub/i386-pc --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
 Use --force if your partitions start at 63 instead of more, such as 2048,
-though you might want to repartition instead to avoid problems.
+though you might want to repartition and reformat.
 
-
-Next, copy over the grub.cfg file as well as the theme it uses :
+Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
 
-If you want to avoid keeping unused translations, themes, etc, instead :
+If you want to avoid keeping unused translations, themes, etc, use this instead :
 
     rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub2
 
-Now create and populate the ${USBMNT}/boot/iso/ sub-directories. Example :
+Now create and populate the `${USBMNT}/boot/iso/` sub-directories you want.
+Example :
 
     mkdir ${USBMNT:-/mnt}/boot/iso
     mkdir ${USBMNT:-/mnt}/boot/iso/ubuntu
 
-The supported sub-directories are :
+The supported sub-directories (in alphabetical order) are :
+
     arch
     debian
     fedora
@@ -91,49 +91,58 @@ The supported sub-directories are :
     ubuntu
 
 Any missing sub-directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution(s), just don't create its directory.
+disabled, so to skip any distribution, just don't create its directory.
 
 Download the right ISO images to the newly created directory. If you require
 different versions, or just part of a distribution, edit the appropriate
-inc-*.cfg file.
+`inc-*.cfg file`.
 
-Note that on 32bit computers, all 64bit entries will be automatically disabled.
+Note that on 32bit computers, all 64bit entries will be automatically hidden.
 
 Special Cases
 -------------
 
-Fedora Live ISOs require a patched initrd to work (still as of Fedora 17) :
-https://bugzilla.redhat.com/show_bug.cgi?id=650672
-https://gist.github.com/2132076
+### Fedora
+
+Fedora Live ISOs require a patched initrd to work (still as of Fedora 18) :
+
+* https://bugzilla.redhat.com/show_bug.cgi?id=650672
+* https://gist.github.com/2132076
 
 To create the required initrd files (about 15MB each), one per architecture
-you will need (shared for all Desktop/KDE/LXDE/XFCE variants) :
+(shared for all Desktop/KDE/LXDE/XFCE variants) you will need to use the
+scripts (found in the scripts sub-directory) :
 
-./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-initrd.img
-./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-initrd.img
-
-
-Red Hat Enterprise Linux isn't "live" as such. And in order for the install to
-work, you need to also copy the "images" directory from the DVD next to the DVD
-ISO, and keep only "install.img" and "product.img".
+    ./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-initrd.img
+    ./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-initrd.img
 
 
-Test your bootable GRUB2 USB memory :
+# Red Hat Enterprise Linux
 
-With KVM it should "just work". The /dev/sdx device should be configured as
+RHEL isn't "live" as such. And in order for the install to work, you need to
+also copy the "images" directory from the DVD next to the DVD ISO, and keep
+only "install.img" and "product.img".
+
+Testing
+-------
+
+With KVM it should "just work". The `/dev/sdx` device should be configured as
 an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
 17), that way you can easily and quickly test changes.
 Make sure you unmount the disk from the host OS before you start the KVM
 virtual machine that uses it.
 
+Troubleshooting
+---------------
 
 If you have any problem to boot, for instance stuck at the GRUB prompt before
 the menu, try running grub-install again.
-If you have other exotic GRUB errors, try formatting your USB memory with a
-different filesystem. I've had the most luck with FAT32...
+If you have other exotic GRUB errors, such as garbage text read instead of the
+configuration directives, try re-formatting your USB memory. I've seen weird
+things happen...
 
 
---
+---
 Copyleft 2012-2013 Matthias Saou <matthias@saou.eu>
 
 All configuration files included are public domain. Do what you want with them.
