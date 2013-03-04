@@ -149,7 +149,7 @@ things happen...
 
 
 ---
-Copyleft 2012-2013 Matthias Saou <matthias@saou.eu>
+Copyleft 2012-2013 Matthias Saou http://matthias.saou.eu/
 
 All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
