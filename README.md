@@ -123,11 +123,20 @@ scripts (found in the scripts sub-directory) :
     ./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-initrd.img
 
 
-# Red Hat Enterprise Linux
+### Red Hat Enterprise Linux
 
 RHEL isn't "live" as such. And in order for the install to work, you need to
 also copy the "images" directory from the DVD next to the DVD ISO, and keep
 only "install.img" and "product.img".
+
+### OpenELEC
+
+OpenELEC isn't provided as ISO images, not is it able to find the `KERNEL` and
+`SYSTEM` files it needs anywhere else than at the root of a filesystem.
+But it's useful to enable booting the OpenELEC installer by just copying both
+files from any single version (ION, Intel, Fusion, Generic, etc.) to the root
+of the USB memory stick, instead of first having to create a new separate USB
+memory just to run the installer.
 
 Testing
 -------
