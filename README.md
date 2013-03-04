@@ -26,6 +26,12 @@ supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4
 and even NTFS, but the boot of the distributions must also support it, which
 isn't the case for many with NTFS.
 
+Screenshots
+-----------
+
+![Main Menu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot1.png)
+![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot2.png)
+
 Installation
 ------------
 
