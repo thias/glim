@@ -35,7 +35,7 @@ terminal-box: "terminal_box_*.png"
 }
 
 + label {
-    text = "GLEE USB - http://matthias.saou.eu/ - v2.3 11/2012"
+    text = "GLEE USB - http://matthias.saou.eu/ - v2.4"
     color = "#FFF"
     align = center
     top = 100%-30
