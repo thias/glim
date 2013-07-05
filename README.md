@@ -108,21 +108,6 @@ Note that on 32bit computers, all 64bit entries will be automatically hidden.
 Special Cases
 -------------
 
-### Fedora
-
-Fedora Live ISOs require a patched initrd to work (still as of Fedora 18) :
-
-* https://bugzilla.redhat.com/show_bug.cgi?id=650672
-* https://gist.github.com/2132076
-
-To create the required initrd files (about 15MB each), one per architecture
-(shared for all Desktop/KDE/LXDE/XFCE variants) you will need to use the
-scripts (found in the scripts sub-directory) :
-
-    ./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-i686-initrd.img
-    ./fedora18-fromiso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-Live-Desktop.iso ${USBMNT:-/mnt}/boot/iso/fedora/Fedora-18-x86_64-initrd.img
-
-
 ### Red Hat Enterprise Linux
 
 RHEL isn't "live" as such. And in order for the install to work, you need to
