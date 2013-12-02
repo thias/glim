@@ -91,7 +91,6 @@ The supported sub-directories (in alphabetical order) are :
     ipxe
     knoppix
     linuxmint
-    pmagic
     rhel
     sysrescd
     ubuntu
