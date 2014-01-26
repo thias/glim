@@ -113,6 +113,14 @@ RHEL isn't "live" as such. And in order for the install to work, you need to
 also copy the "images" directory from the DVD next to the DVD ISO, and keep
 only "install.img" and "product.img".
 
+### Debian DVD Installer
+
+Like RHEL, the Debian DVD isn't a live distro, so special care is needed. 
+You need to download the hd-media installer from debian's archive: 
+[ftp://ftp.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/] 
+and place it in the /boot/iso/debian directory, renaming it for the version and
+architecture, such as /boot/iso/debian/hd-media-7.0.3-amd64/...
+
 ### OpenELEC
 
 OpenELEC isn't provided as ISO images, not is it able to find the `KERNEL` and
