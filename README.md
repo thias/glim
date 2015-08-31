@@ -89,11 +89,13 @@ The supported sub-directories (in alphabetical order) are :
     gparted
     grml
     ipxe
+    kali
     knoppix
     linuxmint
     rhel
     sysrescd
     ubuntu
+    xubuntu
 
 Any missing sub-directory will have the matching boot menu entry automatically
 disabled, so to skip any distribution, just don't create its directory.
