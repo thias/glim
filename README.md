@@ -85,6 +85,7 @@ The supported sub-directories (in alphabetical order) are :
 
     antix
     arch
+    bodhi
     debian
     fedora
     gparted
