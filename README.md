@@ -48,13 +48,25 @@ Preliminary steps (usually already completed on a newly purchased USB memory) :
  * Create a single primary MSDOS partition on your USB memory.
  * Format that partition as FAT32
 
-Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
+Next, install GRUB2 to the USB device's MBR, and onto the new filesystem.
+You can set up GRUB for Legacy BIOS boot mode, UEFI boot mode, or both.
 
-    grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
+The grub-install command used in this step will :
+- write Grub's boot code in the right place (either medium MBR or EFI directory)
+- create and populate the following directories in the partition :
+  boot/
+    grub/
+      fonts/
+      locale/
+      i386-pc/        (MBR mode only)
+      x86_64-efi/     (EFI mode only)
 
- -or- (Ubuntu, for instance)
+##### Legacy BIOS boot
 
-    grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
+    grub-install --target=i386-pc --boot-directory=${USBMNT:-/mnt}/boot \
+                 /dev/${USBDEV}
+
+Boot code will be written to the MBR (so it won't be visible as a file).
 
 If you get the following message :
 
@@ -62,24 +74,37 @@ If you get the following message :
 
 Just find your grub2 directory and specify it as asked. Example :
 
-    grub2-install --directory=/usr/lib/grub/i386-pc --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
+    grub-install --directory=/usr/lib/grub/i386-pc --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
 Use --force if your partitions start at 63 instead of more, such as 2048,
 though you might want to repartition and reformat.
 
+Note that "grub" is replaced by "grub2" on some systems
+(in commands and directory names).
+
+##### UEFI boot
+
+    grub-install --target=x86_64-efi --efi-directory=${USBMNT:-/mnt}/ \
+                 --boot-directory=${USBMNT:-/mnt}/boot/ --removable
+
+Boot code will be written to the file EFI/BOOT/BOOTX64.EFI .
+
+##### GLIM installation
+
 Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
-    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub/
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
-    rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub2
+    rsync -avP --delete --exclude=i386-pc --exclude=x86_64-efi grub2/ ${USBMNT:-/mnt}/boot/grub/
+
+(This will delete the directory locale/ and other files).
 
 Now create and populate the `${USBMNT}/boot/iso/` sub-directories you want.
 Example :
 
-    mkdir ${USBMNT:-/mnt}/boot/iso
-    mkdir ${USBMNT:-/mnt}/boot/iso/ubuntu
+    mkdir -p ${USBMNT:-/mnt}/boot/iso/ubuntu
 
 The supported sub-directories (in alphabetical order) are :
 
@@ -157,4 +182,3 @@ The terminal_box_*.png files are CC-BY-SA-3.0 and come from the GRUB2 starfield
 theme by Daniel Tschudi.
 The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
 as well as the source code, see http://www.gnu.org/software/grub/
-
