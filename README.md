@@ -83,6 +83,7 @@ Example :
 
 The supported sub-directories (in alphabetical order) are :
 
+    antix
     arch
     debian
     fedora
@@ -127,6 +128,18 @@ As of OpenELEC 3.0, Live booting is also supported, but :
  * The FAT filesystem's label must be 'GLIM'
  * The first launch will create a 512MB file as /STORAGE
 This can be tweaked as needed by editing inc-openelec.cfg.
+
+### antiX
+
+antiX kernel can't boot from an ISO image (it lacks options for iso file
+handling). The ISO file content must be extracted to the directory
+iso/antix/<ISO file name w/o extension>/ for GLIM to be able to launch it.
+
+Note that antiX iso files contain a symlink, which is NOT supported by FAT
+file systems. Just skip it and it will work fine, but ensure that every
+other file is copied (the error caused by the symlink may stop extraction
+prematurely when extracting files directly to the USB memory stick).
+
 
 Testing
 -------
