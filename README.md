@@ -35,7 +35,30 @@ Screenshots
 Installation
 ------------
 
-Setting up GRUB require you to be root, while the rest doesn't.
+### Automated installation
+
+The installation script attempts to install the bootloader and multiboot configuration to
+a chosen USB drive, in a safe and automated manner. If you want to install the configuration
+manually, please skip to the next section.
+
+ * Insert the USB memory and find it's block device file using `lsblk, dmesg, gparted...`.
+ * Clone the repository `git clone https://github.com/nodiscc/glim` or [download](https://github.com/nodiscc/glim/archive/master.zip) the ZIP archive
+ * Edit the configuration values in `make-multiboot-usb.sh`:
+
+```
+export USBDEV='/dev/sde'       #target USB drive
+export USBMNT='/mnt'           #where to mount the USB drive (no trailing slash)
+export WINDOWS7_INSTALLER="no" #set to yes to include Windows 7 installer
+export WINDOWS7_ISO_FILE="/path/to/windows-7-installer.iso" #path to the windows 7 ISO image
+```
+ * Copy your iso image files to the appropriate subdirectory in `iso/` (see list of supported subdirectories below).
+ * Inside the base directory, run `./make-multiboot-usb.sh` and follow the instructions.
+ * Wait for the script to complete without error, then remove the USB drive. It is ready to use.
+
+### Manual installation
+
+
+Setting up GRUB requires you to be root, while the rest doesn't.
 
 Set the `USBMNT` variable so that copy/pasting examples will work
 (replace `/mnt` and `sdb` with the appropriate values) :
@@ -52,7 +75,7 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
- -or- (Ubuntu, for instance)
+On Debian/Ubuntu, replace `grub2-install` with `grub-install`:
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -70,6 +93,10 @@ though you might want to repartition and reformat.
 Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
+
+On Debian/Ubuntu, the correct destination directory is `${USBMNT:-/mnt}/boot/grub`:
+
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
@@ -141,6 +168,11 @@ file systems. Just skip it and it will work fine, but ensure that every
 other file is copied (the error caused by the symlink may stop extraction
 prematurely when extracting files directly to the USB memory stick).
 
+### Windows 7 installer
+
+Booting from the installer ISO directly is not supported. To boot a windows 7
+installer just mount the original installer ISO image and copy all the files 
+directly to the root of the USB memory.
 
 Testing
 -------
