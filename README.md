@@ -52,7 +52,7 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
- -or- (Ubuntu, for instance)
+On Debian/Ubuntu, replace `grub2-install` with `grub-install`:
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -70,6 +70,10 @@ though you might want to repartition and reformat.
 Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
+
+On Debian/Ubuntu, the correct destination directory is `${USBMNT:-/mnt}/boot/grub`:
+
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
@@ -159,7 +163,7 @@ the menu, try running grub-install again.
 If you have other exotic GRUB errors, such as garbage text read instead of the
 configuration directives, try re-formatting your USB memory. I've seen weird
 things happen...
-
+If grub-install exits with `grub-install: warning: Attempting to install GRUB to a disk with multiple partition labels.  This is not supported yet..`, use gdisk to [remove GPT partition labels](https://unix.stackexchange.com/a/202752) from the USB memory.
 
 ---
 Copyleft 2012-2013 Matthias Saou http://matthias.saou.eu/
