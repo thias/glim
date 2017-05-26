@@ -163,7 +163,7 @@ the menu, try running grub-install again.
 If you have other exotic GRUB errors, such as garbage text read instead of the
 configuration directives, try re-formatting your USB memory. I've seen weird
 things happen...
-
+If grub-install exits with `grub-install: warning: Attempting to install GRUB to a disk with multiple partition labels.  This is not supported yet..`, use gdisk to [remove GPT partition labels](https://unix.stackexchange.com/a/202752) from the USB memory.
 
 ---
 Copyleft 2012-2013 Matthias Saou http://matthias.saou.eu/
