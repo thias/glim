@@ -52,7 +52,7 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
- -or- (Ubuntu, for instance)
+On Debian/Ubuntu, replace `grub2-install` with `grub-install`:
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -70,6 +70,10 @@ though you might want to repartition and reformat.
 Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
+
+On Debian/Ubuntu, the correct destination directory is `${USBMNT:-/mnt}/boot/grub`:
+
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
