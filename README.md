@@ -170,36 +170,16 @@ prematurely when extracting files directly to the USB memory stick).
 
 ### Windows 7 installer
 
-Booting from the installer ISO directly is not supported. To boot a windows 7 installer just 
-mount the original installer ISO image and copy all the files directly to the root of the 
-USB memory.
+Booting the installer ISO directly is not supported. To boot a windows 7 
+installer, just mount the original installer ISO image and copy all the 
+files directly to the root of the USB memory (or use the installation script).
 
-If the Windows 7 installer partitioning tool fails with `Setup was unable to create a new system partition or locate an existing system partition`, 
-you must [copy the  installer files to the target drive and boot from it](http://druss.co/2014/07/fixed-setup-was-unable-to-create-a-new-system-partition-or-locate-an-existing-system-partition-during-installing-windows-8-18-7-vista-etc-from-usb/): 
-Open the installer's console: `Shift + F10`, `diskpart.exe`, `list disk`, `select disk=X` 
-(with X the target disk number), `clean` (removes all partitions), `create partition 
-primary` (create a primary partition using the max available space), `select partition=1`, 
-`active`, `format fs=ntfs quick`, `assign letter=c` (if another disk/partition already has 
-C: assigned, you must select it and use the command `remove`), select your USB 
-drive/partition and assign it another drive letter (eg `assign letter=k`), `exit`. Navigate 
-to the USB drive and copy all installer files to C: `cd K: && xcopy k: c: /e /h /k`, make 
-the C: drive bootable: `cd boot && bootsect.exe /nt60 c:`, remove USB drive, reboot to your 
-C: drive and install Windows. After installation ensure running `bcdedit.exe` from an
-elevated command prompt displays no errors (in some cases everything appears to be working
-properly but Windows can't find essential boot components and wfeuse installing updates).
-
-Even with all these fixes applied, you might still experience problems. A simple workaround
-is to unplug all drives excecpt the target drive before installing Windows 7.
-
-Windows 7 installation might overwrite the existing bootloader installed on hard drives in a 
-dual-boot setup, if that happens you will not be able to boot your other operating systems 
-anymore: to fix this, boot a Linux live system and run `sudo install-grub /dev/sdX` (where X 
-is your EFI/BIOS configured boot disk). To update an existing grub2 installation and detect a 
-newly installed Windows OS, boot to Linux and run `sudo update-grub`.
-
-Again, uplugging all other drives before Windows installation is recommended. Installing
-Windows on the *same drive* as another OS is not supported.
-
+It is strongly advised to unplug all drives except the target drive before 
+installing Windows. Installing windows on the same drive as another OS is 
+currently NOT supported. It leads to inconsistencies in Windows boot 
+mechanisms even when the installation appears successful.
+(See https://github.com/thias/glim/pull/13/commits/f1ea6f203017c307e1da91eead916b146cf27fc0)
+Windows installation may also overwrite already existing bootloaders.
 
 Testing
 -------
