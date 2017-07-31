@@ -35,7 +35,33 @@ Screenshots
 Installation
 ------------
 
-Setting up GRUB require you to be root, while the rest doesn't.
+### Automated installation
+
+The installation script attempts to install the bootloader and multiboot configuration to
+a chosen USB drive, in a safe and automated manner. If you want to install the configuration
+manually, please skip to the next section.
+
+ * Insert the USB memory and find it's block device file using `lsblk, dmesg, gparted...`.
+ * Clone the repository `git clone https://github.com/nodiscc/glim` or [download](https://github.com/nodiscc/glim/archive/master.zip) the ZIP archive
+ * Copy your Linux distributions ISO images to appropriate subdirectories in `iso/` (see list of supported subdirectories below).
+ * If needed, copy extra files/directories to the iso/extra/ directory. These files will be copied to the USB drive (`boot/iso/extra` directory).
+ * Edit the configuration values in `make-multiboot-usb.sh`:
+
+```
+export USBDEV='/dev/sde'       #target USB drive
+export USBMNT='/mnt'           #where to mount the USB drive (no trailing slash)
+export WINDOWS7_INSTALLER="no" #set to yes to include Windows 7 installer
+export WINDOWS7_ISO_FILE="/path/to/windows-7-installer.iso" #path to the windows 7 ISO image
+
+```
+ * Copy your other iso image files to the appropriate subdirectory in `iso/` (see list of supported subdirectories below).
+ * Inside the base directory, run `./make-multiboot-usb.sh` and follow the instructions.
+ * Wait for the script to complete without error, then remove the USB drive. It is ready to use.
+
+### Manual installation
+
+
+Setting up GRUB requires you to be root, while the rest doesn't.
 
 Set the `USBMNT` variable so that copy/pasting examples will work
 (replace `/mnt` and `sdb` with the appropriate values) :
@@ -52,7 +78,7 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
- -or- (Ubuntu, for instance)
+On Debian/Ubuntu, replace `grub2-install` with `grub-install`:
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -70,6 +96,10 @@ though you might want to repartition and reformat.
 Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
+
+On Debian/Ubuntu, the correct destination directory is `${USBMNT:-/mnt}/boot/grub`:
+
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
@@ -141,7 +171,26 @@ file systems. Just skip it and it will work fine, but ensure that every
 other file is copied (the error caused by the symlink may stop extraction
 prematurely when extracting files directly to the USB memory stick).
 
+### Windows 7 installer
 
+Booting from the installer ISO directly is not supported. To boot a windows 7 
+installer, just mount the original installer ISO image and copy all the 
+files directly to the root of the USB memory (See [Automated instllation)(#automated-installation) ).
+
+It is strongly advised to unplug all drives except the target drive before
+installing Windows. Installing windows on the same drive as another OS is 
+currently NOT supported. It leads to inconsistencies in Windows boot 
+mechanisms even when the installation appears successful.
+(See https://github.com/thias/glim/pull/13/commits/f1ea6f203017c307e1da91eead916b146cf27fc0)
+Windows installation may also overwrite already existing bootloaders.
+If you really need to install windows to the same drive as another OS,
+it is recommended to install Windows first.
+
+There are other problems related to multibooting Linux/Windows from the
+same drive, particularly failing Windows update due to unreadable BCD
+(Boot Configuration Data). If `bcdedit` returns an error, you'll have to
+rebuild the BCD: [1](https://answers.microsoft.com/en-us/windows/forum/windows8_1-windows_install/total-identified-windows-installations-0/52359f87-de4a-41dc-b0c3-cc275e1d9fbf),
+[2](https://blogs.technet.microsoft.com/joscon/2011/02/17/windows-72008-r2-service-pack-1-fails-with-0x800f0a12/).
 Testing
 -------
 
@@ -155,11 +204,10 @@ Troubleshooting
 ---------------
 
 If you have any problem to boot, for instance stuck at the GRUB prompt before
-the menu, try running grub-install again.
+the menu, try running grub-install again.  
 If you have other exotic GRUB errors, such as garbage text read instead of the
 configuration directives, try re-formatting your USB memory. I've seen weird
-things happen...
-
+things happen...  
 
 ---
 Copyleft 2012-2013 Matthias Saou http://matthias.saou.eu/
@@ -171,4 +219,6 @@ The terminal_box_*.png files are CC-BY-SA-3.0 and come from the GRUB2 starfield
 theme by Daniel Tschudi.
 The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
 as well as the source code, see http://www.gnu.org/software/grub/
+The splash.png file is from https://unsplash.com/, under [CC0 License](https://creativecommons.org/publicdomain/zero/1.0/)  
+make-multiboot-usb.sh by nodiscc, under Public Domain.
 
