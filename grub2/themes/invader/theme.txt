@@ -1,11 +1,15 @@
 # GRUB gfxmenu theme "invader".
 
-desktop-color: "#000"
-terminal-box: "terminal_box_*.png"
+#desktop-color: "#000"
+#terminal-box: "terminal_box_*.png"
+desktop-image: "/boot/grub/themes/invader/splash.png"
+title-color: "#ffffff"
+title-text: ""
 
+#boot menu
 + boot_menu {
-    item_color = "#F33"
-    selected_item_color = "#FFF"
+    item_color = "#FFF"
+    selected_item_color = "#97A8B9"
     top = 20
     left = 20
     width = 100%-40
@@ -18,12 +22,13 @@ terminal-box: "terminal_box_*.png"
     item_spacing = 0
 }
 
-+ image {
-    file = "invader-220x160.png"
-    top = 20
-    left = 100%-240
-}
+#+ image {
+#    file = "invader-220x160.png"
+#    top = 20
+#    left = 100%-240
+#}
 
+#help bar at the bottom
 + label {
     text = "'Up', 'Down', 'Enter', 'Esc' to navigate, 'e' to edit options"
     color = "#FFF"
@@ -35,7 +40,7 @@ terminal-box: "terminal_box_*.png"
 }
 
 + label {
-    text = "GLEE USB - http://matthias.saou.eu/ - v2.4"
+    text = "GLIM/MULTIBOOT-USB https://github.com/nodiscc/glim"
     color = "#FFF"
     align = center
     top = 100%-30
