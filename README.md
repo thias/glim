@@ -59,6 +59,10 @@ Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
+For EFI you must add the following to the above command :
+
+    --target=x86_64-efi --efi-directory=${USBMNT:-/mnt} --removable
+
 If you get the following message :
 
     source_dir doesn't exist. Please specify --target or --directory
@@ -80,11 +84,11 @@ Next, copy over all the required files (`grub.cfg` and files it includes, theme,
 
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
-    rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub2
+    rsync -avP --delete --exclude=i386-pc --exclude=x86_64-efi grub2/ ${USBMNT:-/mnt}/boot/grub2
 
  -or- (Debian/Ubuntu, for instance)
 
-    rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub
+    rsync -avP --delete --exclude=i386-pc --exclude=x86_64-efi grub2/ ${USBMNT:-/mnt}/boot/grub
 
 Now create and populate the `${USBMNT}/boot/iso/` sub-directories you want.
 Example :

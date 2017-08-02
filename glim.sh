@@ -72,11 +72,32 @@ echo "Found mount point for filesystem : ${USBMNT}"
 
 
 #
+# EFI or regular?
+#
+
+# Set the target
+read -n 1 -s -p "Install for EFI instead of standard BIOS? (y/N) " EFI
+if [[ "$EFI" == "y" ]]; then
+  GRUB_TARGET="--target=x86_64-efi --efi-directory=${USBMNT} --removable"
+  echo "y"
+else
+  GRUB_TARGET="--target=i386-pc"
+  echo "n"
+fi
+
+# Sanity check : for EFI, an additional package might be missing
+if [[ $EFI == "y" && ! -d /usr/lib/grub/x86_64-efi ]]; then
+  echo "ERROR: no /usr/lib/grub/x86_64-efi dir (grub2-efi-modules rpm missing?)"
+  exit 1
+fi
+
+
+#
 # Get serious. If we get here, things are looking sane
 #
 
 # Sanity check : human will read the info and confirm
-read -n 1 -s -p "Ready to install GLIM. Continue (y/N)? " PROCEED
+read -n 1 -s -p "Ready to install GLIM. Continue? (y/N) " PROCEED
 if [[ "$PROCEED" != "y" ]]; then
   echo "n"
   exit 2
@@ -85,16 +106,16 @@ else
 fi
 
 # Install GRUB2
-echo "Running ${GRUB2_INSTALL} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-sudo ${GRUB2_INSTALL} --boot-directory=${USBMNT}/boot ${USBDEV}
+echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
+sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
 if [[ $? -ne 0 ]]; then
   "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
   exit 1
 fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -a --delete --exclude=i386-pc ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-rsync -a --delete --exclude=i386-pc ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+echo "Running rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
+rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
 if [[ $? -ne 0 ]]; then
   "ERROR: the rsync copy returned with an error exit status."
   exit 1
