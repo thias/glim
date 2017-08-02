@@ -37,22 +37,25 @@ Installation
 
 Setting up GRUB require you to be root, while the rest doesn't.
 
-Set the `USBMNT` variable so that copy/pasting examples will work
-(replace `/mnt` and `sdb` with the appropriate values) :
+All the logic detailed below is replicated in the `glim.sh` script.
 
-    export USBMNT=/mnt
-    export USBDEV=sdb
+Set the `USBMNT` variable so that copy/pasting examples will work
+(replace `/mnt` and `sdx` with the appropriate values) :
+
+    export USBMNT=/run/media/${SUDO_USER:-`id -un`}/GLIM
+    export USBDEV=sdx
 
 Preliminary steps (usually already completed on a newly purchased USB memory) :
 
  * Create a single primary MSDOS partition on your USB memory.
- * Format that partition as FAT32
+ * Format that partition as FAT32 (label 'GLIM' for the above `USBMNT` to work).
+ * Mount the filesystem on the `USBMNT` directory.
 
 Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
 
     grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
- -or- (Ubuntu, for instance)
+ -or- (Debian/Ubuntu, for instance)
 
     grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
 
@@ -71,15 +74,22 @@ Next, copy over all the required files (`grub.cfg` and files it includes, theme,
 
     rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
 
+ -or- (Debian/Ubuntu, for instance)
+
+    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
+
 If you want to avoid keeping unused translations, themes, etc, use this instead :
 
     rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub2
 
+ -or- (Debian/Ubuntu, for instance)
+
+    rsync -avP --delete --exclude=i386-pc grub2/ ${USBMNT:-/mnt}/boot/grub
+
 Now create and populate the `${USBMNT}/boot/iso/` sub-directories you want.
 Example :
 
-    mkdir ${USBMNT:-/mnt}/boot/iso
-    mkdir ${USBMNT:-/mnt}/boot/iso/ubuntu
+    mkdir -p ${USBMNT:-/mnt}/boot/iso/ubuntu
 
 The supported sub-directories (in alphabetical order) are :
 
