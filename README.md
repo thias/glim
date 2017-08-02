@@ -100,6 +100,7 @@ The supported sub-directories (in alphabetical order) are :
     antix
     arch
     bodhi
+    clonezilla
     debian
     fedora
     gparted
