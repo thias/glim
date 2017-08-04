@@ -126,12 +126,6 @@ Note that on 32bit computers, all 64bit entries will be automatically hidden.
 Special Cases
 -------------
 
-### Red Hat Enterprise Linux
-
-RHEL isn't "live" as such. And in order for the install to work, you need to
-also copy the "images" directory from the DVD next to the DVD ISO, and keep
-only "install.img" and "product.img".
-
 ### OpenELEC
 
 OpenELEC isn't provided as ISO images, not is it able to find the `KERNEL` and
