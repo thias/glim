@@ -24,7 +24,6 @@ fi
 
 # Sanity check : Our GRUB2 configuration
 GRUB2_CONF="`dirname $0`/grub2"
-echo $GRUB2_CONF
 if [[ ! -f ${GRUB2_CONF}/grub.cfg ]]; then
   echo "ERROR: grub2/grub.cfg to use not found."
   exit 1
@@ -63,10 +62,12 @@ fi
 # Sanity check : our partition is mounted
 if ! grep -q -w ${USBDEV1} /proc/mounts; then
   echo "ERROR: ${USBDEV1} isn't mounted"
+  exit 1
 fi
 USBMNT=`grep -w ${USBDEV1} /proc/mounts | cut -d ' ' -f 2`
 if [[ -z "$USBMNT" ]]; then
   echo "ERROR: Couldn't find mount point for ${USBDEV1}"
+  exit 1
 fi
 echo "Found mount point for filesystem : ${USBMNT}"
 
