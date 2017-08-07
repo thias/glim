@@ -77,13 +77,13 @@ echo "Found mount point for filesystem : ${USBMNT}"
 #
 
 # Set the target
-read -n 1 -s -p "Install for EFI instead of standard BIOS? (y/N) " EFI
-if [[ "$EFI" == "y" ]]; then
-  GRUB_TARGET="--target=x86_64-efi --efi-directory=${USBMNT} --removable"
-  echo "y"
-else
-  GRUB_TARGET="--target=i386-pc"
+read -n 1 -s -p "Install for EFI in addition to standard BIOS? (Y/n) " EFI
+if [[ "$EFI" == "n" ]]; then
+  EFI=false
   echo "n"
+else
+  EFI=true
+  echo "y"
 fi
 
 # Sanity check : for EFI, an additional package might be missing
@@ -98,8 +98,8 @@ fi
 #
 
 # Sanity check : human will read the info and confirm
-read -n 1 -s -p "Ready to install GLIM. Continue? (y/N) " PROCEED
-if [[ "$PROCEED" != "y" ]]; then
+read -n 1 -s -p "Ready to install GLIM. Continue? (Y/n) " PROCEED
+if [[ "$PROCEED" == "n" ]]; then
   echo "n"
   exit 2
 else
@@ -107,18 +107,28 @@ else
 fi
 
 # Install GRUB2
+GRUB_TARGET="--target=i386-pc"
 echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
 sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
 if [[ $? -ne 0 ]]; then
-  "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
+  echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
   exit 1
+fi
+if [[ $EFI == true ]]; then
+  GRUB_TARGET="--target=x86_64-efi --efi-directory=${USBMNT} --removable"
+  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
+  sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
+  if [[ $? -ne 0 ]]; then
+    echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
+    exit 1
+  fi
 fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+echo "Running rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
+rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
 if [[ $? -ne 0 ]]; then
-  "ERROR: the rsync copy returned with an error exit status."
+  echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
 
