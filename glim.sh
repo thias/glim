@@ -87,7 +87,7 @@ else
 fi
 
 # Sanity check : for EFI, an additional package might be missing
-if [[ $EFI == "y" && ! -d /usr/lib/grub/x86_64-efi ]]; then
+if [[ $EFI == true && ! -d /usr/lib/grub/x86_64-efi ]]; then
   echo "ERROR: no /usr/lib/grub/x86_64-efi dir (grub2-efi-modules rpm missing?)"
   exit 1
 fi
