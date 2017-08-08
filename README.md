@@ -3,6 +3,7 @@ GRUB2 Live ISO Multiboot
 
 http://github.com/thias/glim | http://glee.thias.es/GLIM
 
+
 Overview
 --------
 
@@ -111,6 +112,7 @@ The supported sub-directories (in alphabetical order) are :
     linuxmint
     rhel
     sysrescd
+    tails
     ubuntu
     xubuntu
 
