@@ -15,6 +15,7 @@ Advantages over extracting files or using special Live USB creation tools :
 
  * A single USB memory can hold all Live environments (the limit is its size)
  * ISO images stay available to burn real CDs or DVDs
+ * ISO images are quick to manipulate (vs. hundreds+ files)
 
 Disadvantages :
 
@@ -25,7 +26,8 @@ My experience has been that the safest filesystem to use is FAT32
 (surprisingly!), though it will mean that ISO images greater than 4GB won't be
 supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4
 and even NTFS, but the boot of the distributions must also support it, which
-isn't the case for many with NTFS.
+isn't the case for many with NTFS, for instance. So FAT32 stays the safe bet.
+
 
 Screenshots
 -----------
@@ -33,74 +35,23 @@ Screenshots
 ![Main Menu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot1.png)
 ![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot2.png)
 
+
 Installation
 ------------
 
-Setting up GRUB require you to be root, while the rest doesn't.
+Once you have your USB memory with a single partition formatted as FAT32 with
+the filesystem label 'GLIM', just run (as a normal user) :
 
-All the logic detailed below is replicated in the `glim.sh` script.
+    ./glim.sh
 
-Set the `USBMNT` variable so that copy/pasting examples will work
-(replace `/mnt` and `sdx` with the appropriate values) :
+Once finished, you may change the filesystem label to anything you like.
 
-    export USBMNT=/run/media/${SUDO_USER:-`id -un`}/GLIM
-    export USBDEV=sdx
-
-Preliminary steps (usually already completed on a newly purchased USB memory) :
-
- * Create a single primary MSDOS partition on your USB memory.
- * Format that partition as FAT32 (label 'GLIM' for the above `USBMNT` to work).
- * Mount the filesystem on the `USBMNT` directory.
-
-Next, install GRUB2 to the USB device's MBR, and onto the new filesystem :
-
-    grub2-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
-
- -or- (Debian/Ubuntu, for instance)
-
-    grub-install --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
-
-For EFI you must add the following to the above command :
-
-    --target=x86_64-efi --efi-directory=${USBMNT:-/mnt} --removable
-
-If you get the following message :
-
-    source_dir doesn't exist. Please specify --target or --directory
-
-Just find your grub2 directory and specify it as asked. Example :
-
-    grub2-install --directory=/usr/lib/grub/i386-pc --boot-directory=${USBMNT:-/mnt}/boot /dev/${USBDEV}
-
-Use --force if your partitions start at 63 instead of more, such as 2048,
-though you might want to repartition and reformat.
-
-Next, copy over all the required files (`grub.cfg` and files it includes, theme, font) :
-
-    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub2
-
- -or- (Debian/Ubuntu, for instance)
-
-    rsync -avP grub2/ ${USBMNT:-/mnt}/boot/grub
-
-If you want to avoid keeping unused translations, themes, etc, use this instead :
-
-    rsync -avP --delete --exclude=i386-pc --exclude=x86_64-efi grub2/ ${USBMNT:-/mnt}/boot/grub2
-
- -or- (Debian/Ubuntu, for instance)
-
-    rsync -avP --delete --exclude=i386-pc --exclude=x86_64-efi grub2/ ${USBMNT:-/mnt}/boot/grub
-
-Now create and populate the `${USBMNT}/boot/iso/` sub-directories you want.
-Example :
-
-    mkdir -p ${USBMNT:-/mnt}/boot/iso/ubuntu
-
-The supported sub-directories (in alphabetical order) are :
+The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
     antix
     arch
     bodhi
+    centos
     clonezilla
     debian
     fedora
@@ -108,7 +59,6 @@ The supported sub-directories (in alphabetical order) are :
     grml
     ipxe
     kali
-    knoppix
     linuxmint
     rhel
     sysrescd
@@ -117,13 +67,14 @@ The supported sub-directories (in alphabetical order) are :
     xubuntu
 
 Any missing sub-directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution, just don't create its directory.
+disabled, so to skip any distribution, just don't create the directory.
 
 Download the right ISO images to the newly created directory. If you require
 different versions, or just part of a distribution, edit the appropriate
-`inc-*.cfg file`.
+`boot/grub2/inc-*.cfg` file.
 
 Note that on 32bit computers, all 64bit entries will be automatically hidden.
+
 
 Special Cases
 -------------
@@ -151,24 +102,38 @@ an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
 Make sure you unmount the disk from the host OS before you start the KVM
 virtual machine that uses it.
 
+
 Troubleshooting
 ---------------
 
 If you have any problem to boot, for instance stuck at the GRUB prompt before
-the menu, try running grub-install again.
+the menu, try re-installing.
 If you have other exotic GRUB errors, such as garbage text read instead of the
-configuration directives, try re-formatting your USB memory. I've seen weird
-things happen...
+configuration directives, try re-formatting your USB memory from scratch.
+I've seen weird things happen...
+
+
+Contributing
+------------
+
+If you find GLIM useful but the configuration of the OS you require is missing
+or simply outdated, please feel free to contribute! What you will need is
+create a GitHub pull request which includes :
+ * All changes properly and fully tested.
+ * New entries added similarly to the existing ones :
+   * In alphabetical order.
+   * With all possible relevant variants (i.e. not just the one spin you want).
+ * An original icon of high quality, and a shrunk 24x24 px version.
+ * An updated supported directories list in this README file.
 
 
 ---
-Copyleft 2012-2013 Matthias Saou http://matthias.saou.eu/
+Copyleft 2012-2017 Matthias Saou http://matthias.saou.eu/
 
 All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
 copyright somewhere, do what you want with it.
-The terminal_box_*.png files are CC-BY-SA-3.0 and come from the GRUB2 starfield
-theme by Daniel Tschudi.
+The background is "Wallpaper grey" © 2008 payalnic (DeviantArt)
 The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
 as well as the source code, see http://www.gnu.org/software/grub/
 
