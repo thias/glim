@@ -1,7 +1,7 @@
 GRUB2 Live ISO Multiboot
 ========================
 
-http://github.com/thias/glim | http://glee.thias.es/GLIM
+https://github.com/thias/glim | http://glee.thias.es/GLIM
 
 
 Overview
@@ -32,8 +32,8 @@ isn't the case for many with NTFS, for instance. So FAT32 stays the safe bet.
 Screenshots
 -----------
 
-![Main Menu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot1.png)
-![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-2.4-shot2.png)
+![Main Menu](https://github.com/thias/glim/raw/master/screenshots/GLIM-3.0-shot1.png)
+![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-3.0-shot2.png)
 
 
 Installation
