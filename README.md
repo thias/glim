@@ -54,6 +54,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     centos
     clonezilla
     debian
+    elementary
     fedora
     gparted
     grml
