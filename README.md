@@ -61,6 +61,8 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     ipxe
     kali
     linuxmint
+    netrunner
+    porteus
     rhel
     sabayon
     sysrescd
