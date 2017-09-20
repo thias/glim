@@ -71,25 +71,40 @@ if [[ -z "$USBMNT" ]]; then
 fi
 echo "Found mount point for filesystem : ${USBMNT}"
 
+BIOS=true
+# Check BIOS support
+if [[ -d /usr/lib/grub/i386-pc ]]; then
+  BIOS=true
+else
+  echo "WARNING: no /usr/lib/grub/i386-pc dir. Skipping Grub BIOS support"
+  BIOS=false
+  EFI=true
+fi
 
 #
 # EFI or regular?
 #
 
-# Set the target
-read -n 1 -s -p "Install for EFI in addition to standard BIOS? (Y/n) " EFI
-if [[ "$EFI" == "n" ]]; then
-  EFI=false
-  echo "n"
-else
-  EFI=true
-  echo "y"
+if [[ $BIOS == true ]]; then
+  # Set the target
+  read -n 1 -s -p "Install for EFI in addition to standard BIOS? (Y/n) " EFI
+  if [[ "$EFI" == "n" ]]; then
+      EFI=false
+      echo "n"
+  else
+    EFI=true
+    echo "y"
+  fi
 fi
 
 # Sanity check : for EFI, an additional package might be missing
 if [[ $EFI == true && ! -d /usr/lib/grub/x86_64-efi ]]; then
-  echo "ERROR: no /usr/lib/grub/x86_64-efi dir (grub2-efi-modules rpm missing?)"
-  exit 1
+  if [[ $BIOS == false ]]; then
+    echo "ERROR: neither support for BIOS or EFI was found"
+  else
+    echo "WARNING: no /usr/lib/grub/x86_64-efi dir (grub2-efi-modules rpm missing?), skipping"
+    exit 1
+  fi
 fi
 
 
@@ -107,12 +122,14 @@ else
 fi
 
 # Install GRUB2
-GRUB_TARGET="--target=i386-pc"
-echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
-if [[ $? -ne 0 ]]; then
-  echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
-  exit 1
+if [[ $BIOS == true ]]; then
+  GRUB_TARGET="--target=i386-pc"
+  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
+  sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
+  if [[ $? -ne 0 ]]; then
+      echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
+      exit 1
+  fi
 fi
 if [[ $EFI == true ]]; then
   GRUB_TARGET="--target=x86_64-efi --efi-directory=${USBMNT} --removable"
