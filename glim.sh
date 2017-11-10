@@ -141,15 +141,22 @@ if [[ $EFI == true ]]; then
   fi
 fi
 
+# Check USB mount dir write permission, to use sudo if missing
+if [[ -w "${USBMNT}" ]]; then
+  CMD_PREFIX=""
+else
+  CMD_PREFIX="sudo"
+fi
+
 # Copy GRUB2 configuration
-echo "Running rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+echo "Running rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
+${CMD_PREFIX} rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
 if [[ $? -ne 0 ]]; then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d ${USBMNT}/boot/iso ]] || mkdir ${USBMNT}/boot/iso
+[[ -d ${USBMNT}/boot/iso ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso
 echo "GLIM installed! Time to populate the boot/iso directory."
 
