@@ -141,15 +141,35 @@ if [[ $EFI == true ]]; then
   fi
 fi
 
+# Check write permission on media$(echo $MEDIA_DATA | )
+MEDIA_DATA=$(ls -all $USBMNT)
+WRITABLE=false
+# If the user own the media
+if [[ "$(id -u -n)" == "$(echo $MEDIA_DATA | awk '{ print($3); }')" ]]; then
+    WRITABLE=true
+else
+    # else check if all user can write on it
+    PERMISSION=$(echo $MEDIA_DATA | awk '{ print ($1); }')
+    if [[ "$PERMISSION" == "w" ]]; then
+        WRITABLE=true
+    fi
+fi
+
+APPEND=""
+# Can we write?
+if [[ $WRITABLE == false ]]; then
+    APPEND="sudo"
+fi
+
 # Copy GRUB2 configuration
 echo "Running rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+$APPEND rsync -a --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
 if [[ $? -ne 0 ]]; then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d ${USBMNT}/boot/iso ]] || mkdir ${USBMNT}/boot/iso
+[[ -d ${USBMNT}/boot/iso ]] || $APPEND mkdir ${USBMNT}/boot/iso
 echo "GLIM installed! Time to populate the boot/iso directory."
 
