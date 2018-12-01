@@ -4,9 +4,10 @@
 #
 
 # Check that we are *NOT* running as root
-if (( EUID == 0 )); then
-  echo "ERROR: Don't run as root, use a user with full sudo access."
-  exit 1
+if (( EUID != 0 )); then
+  CMD_PREFIX='sudo'
+else
+  CMD_PREFIX=''
 fi
 
 # Sanity check : GRUB2
@@ -38,7 +39,7 @@ if ! command -v blkid &>/dev/null; then
   echo 'ERROR: blkid command not found.'
   exit 1
 fi
-USBDEV1="$(blkid --label GLIM --list-one)"
+USBDEV1="$(${CMD_PREFIX} blkid --label GLIM --list-one)"
 
 # Sanity check : we found one partition to use with matching label
 if [[ -z "$USBDEV1" ]]; then
@@ -54,17 +55,17 @@ if [[ ! -b "$USBDEV" ]]; then
   exit 1
 fi
 echo "Found block device where to install GRUB2 : ${USBDEV}"
-if [[ "$(lsblk --list --noheadings --output TYPE "${USBDEV}" | grep --count 'part')" -ne 1 ]]; then
+if [[ "$(${CMD_PREFIX} lsblk --list --noheadings --output TYPE "${USBDEV}" | grep --count 'part')" -ne 1 ]]; then
   echo "ERROR: ${USBDEV1} isn't the only partition on ${USBDEV}"
   exit 1
 fi
 
 # Sanity check : our partition is mounted
-if ! findmnt --noheadings --output TARGET "${USBDEV1}" &>/dev/null; then
+if ! ${CMD_PREFIX} findmnt --noheadings --output TARGET "${USBDEV1}" &>/dev/null; then
   echo "ERROR: ${USBDEV1} isn't mounted"
   exit 1
 fi
-USBMNT="$(findmnt --noheadings --output TARGET "${USBDEV1}")"
+USBMNT="$(${CMD_PREFIX} findmnt --noheadings --output TARGET "${USBDEV1}")"
 if [[ -z "$USBMNT" ]]; then
   echo "ERROR: Couldn't find mount point for ${USBDEV1}"
   exit 1
@@ -122,34 +123,26 @@ else
 fi
 
 # Install GRUB2
+GRUB_COMMON_ARGS=("--boot-directory=${USBMNT}/boot" '--themes=' '--recheck')
 declare -a GRUB_TARGET
 if (( BIOS == 1 )); then
   GRUB_TARGET=('--target=i386-pc')
-  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET[*]} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-  if ! sudo "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" --boot-directory="${USBMNT}/boot" "${USBDEV}"; then
+  if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}" "${USBDEV}"); then
       echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
       exit 1
   fi
 fi
 if (( EFI == 1 )); then
   GRUB_TARGET=('--target=x86_64-efi' "--efi-directory=${USBMNT}" '--removable')
-  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET[*]} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-  if ! sudo "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" --boot-directory="${USBMNT}/boot" "${USBDEV}"; then
+  if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
     echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
     exit 1
   fi
 fi
 
-# Check USB mount dir write permission, to use sudo if missing
-if [[ -w "${USBMNT}" ]]; then
-  CMD_PREFIX=''
-else
-  CMD_PREFIX='sudo'
-fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-if ! ${CMD_PREFIX} rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='fonts' --exclude='icons/originals' "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"; then
+if ! (set -x; ${CMD_PREFIX} rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='fonts' --exclude='icons/originals' "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
