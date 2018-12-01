@@ -149,8 +149,8 @@ else
 fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-${CMD_PREFIX} rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+echo "Running rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
+${CMD_PREFIX} rsync -rpt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts --exclude=icons/originals ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
 if [[ $? -ne 0 ]]; then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
