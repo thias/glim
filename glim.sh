@@ -138,11 +138,20 @@ if (( EFI == 1 )); then
     echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
     exit 1
   fi
+  if [[ -d '/usr/lib/grub/i386-efi' ]]; then
+    GRUB_TARGET=('--target=i386-efi' "--efi-directory=${USBMNT}" '--removable')
+    if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
+      echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
+      exit 1
+    fi
+    # GRUB Bug: Remove unneded file, ${USBMNT}/EFI/BOOT/BOOTIA32.EFI provides the bootloader
+    [[ -e "${USBMNT}/EFI/BOOT/grub.efi" ]] && ${CMD_PREFIX} rm "${USBMNT}/EFI/BOOT/grub.efi"
+  fi
 fi
 
 
 # Copy GRUB2 configuration
-if ! (set -x; ${CMD_PREFIX} rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='fonts' --exclude='icons/originals' "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
+if ! (set -x; ${CMD_PREFIX} rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='i386-efi' --exclude='fonts' --exclude='icons/originals' "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
