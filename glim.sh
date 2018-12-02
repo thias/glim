@@ -3,7 +3,20 @@
 # BASH. It's what I know best, sorry.
 #
 
-# Check that we are *NOT* running as root
+# Sanity check : partition is specified and exists
+if [[ -z "$1" ]]; then
+	echo 'ERROR: no partition specified.'
+	echo "Usage: ${0##*/} /dev/path/to/target/partition "
+	exit 1
+elif [[ ! -b "$1" ]]; then
+	echo "ERROR: $1 block device not found."
+	exit 1
+else
+	USBPART="$(realpath -- "$1")"
+fi
+
+
+# Use `sudo` if user is not root
 if (( EUID != 0 )); then
         CMD_PREFIX='sudo --'
 else
@@ -23,53 +36,28 @@ else
 fi
 
 # Sanity check : Our GRUB2 configuration
-GRUB2_CONF="$(dirname -- "$0")/grub2"
+GRUB2_CONF="$(realpath -- "${0%/*}/grub2")"
 if [[ ! -f "${GRUB2_CONF}/grub.cfg" ]]; then
 	echo 'ERROR: grub2/grub.cfg to use not found.'
 	exit 1
 fi
 
 #
-# Find GLIM device (use the first if multiple found, you've asked for trouble!)
+# Find disk of GLIM partition
 #
 
-# Sanity check : blkid command
-if ! command -v blkid &>/dev/null; then
-	echo 'ERROR: blkid command not found.'
-	exit 1
-fi
-USBDEV1="$(${CMD_PREFIX} blkid --label GLIM --list-one)"
+USBDEV="$(${CMD_PREFIX} lsblk --list --nodeps --noheadings --output PKNAME --paths -- "$USBPART")"
+echo "GRUB2 will be installed to: disk ${USBDEV} partition ${USBPART}"
 
-# Sanity check : we found one partition to use with matching label
-if [[ -z "$USBDEV1" ]]; then
-	echo "ERROR: no partition found with label 'GLIM', please create one."
-	exit 1
-fi
-echo "Found partition with label 'GLIM' : ${USBDEV1}"
-
-# Sanity check : our partition is the first and only one on the block device
-USBDEV="${USBDEV1%1}"
-if [[ ! -b "$USBDEV" ]]; then
-	echo "ERROR: ${USBDEV} block device not found."
-	exit 1
-fi
-echo "Found block device where to install GRUB2 : ${USBDEV}"
-if [[ "$(${CMD_PREFIX} lsblk --list --noheadings --output TYPE -- "${USBDEV}" | grep --count 'part')" -ne 1 ]]; then
-	echo "ERROR: ${USBDEV1} isn't the only partition on ${USBDEV}"
-	exit 1
-fi
 
 # Sanity check : our partition is mounted
-if ! ${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBDEV1}" &>/dev/null; then
-	echo "ERROR: ${USBDEV1} isn't mounted"
+if ! ${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBPART}" &>/dev/null; then
+	echo "ERROR: ${USBPART} isn't mounted"
 	exit 1
+else
+	USBMNT="$(${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBPART}")"
+	echo "Found mount point for filesystem : ${USBMNT}"
 fi
-USBMNT="$(${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBDEV1}")"
-if [[ -z "$USBMNT" ]]; then
-	echo "ERROR: Couldn't find mount point for ${USBDEV1}"
-	exit 1
-fi
-echo "Found mount point for filesystem : ${USBMNT}"
 
 
 # Check supported targets
