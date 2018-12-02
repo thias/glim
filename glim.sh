@@ -18,9 +18,9 @@ fi
 
 # Use `sudo` if user is not root
 if (( EUID != 0 )); then
-        CMD_PREFIX='sudo --'
+        PRIVILEGE_ELEVATION='sudo --'
 else
-        CMD_PREFIX=''
+        PRIVILEGE_ELEVATION=''
 fi
 
 # Sanity check : GRUB2
@@ -46,16 +46,16 @@ fi
 # Find disk of GLIM partition
 #
 
-USBDEV="$(${CMD_PREFIX} lsblk --list --nodeps --noheadings --output PKNAME --paths -- "$USBPART")"
+USBDEV="$(lsblk --list --nodeps --noheadings --output PKNAME --paths -- "$USBPART")"
 echo "GRUB2 will be installed to: disk ${USBDEV} partition ${USBPART}"
 
 
 # Sanity check : our partition is mounted
-if ! ${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBPART}" &>/dev/null; then
+if ! findmnt --noheadings --output TARGET -- "${USBPART}" &>/dev/null; then
 	echo "ERROR: ${USBPART} isn't mounted"
 	exit 1
 else
-	USBMNT="$(${CMD_PREFIX} findmnt --noheadings --output TARGET -- "${USBPART}")"
+	USBMNT="$(findmnt --noheadings --output TARGET -- "${USBPART}")"
 	echo "Found mount point for filesystem : ${USBMNT}"
 fi
 
@@ -139,35 +139,35 @@ GRUB_COMMON_ARGS=("--boot-directory=${USBMNT}/boot" '--themes=' '--recheck')
 declare -a GRUB_TARGET
 if (( BIOS == 1 )); then
 	GRUB_TARGET=('--target=i386-pc')
-	if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}" -- "${USBDEV}"); then
+	if ! (set -x; ${PRIVILEGE_ELEVATION} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}" -- "${USBDEV}"); then
 		echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
 		exit 1
 	fi
 fi
 if (( EFI == 1 )); then
 	GRUB_TARGET=('--target=x86_64-efi' "--efi-directory=${USBMNT}" '--removable')
-	if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
+	if ! (set -x; ${PRIVILEGE_ELEVATION} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
 		echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
 		exit 1
 	fi
 fi
 if (( EFI32 == 1 )); then
 	GRUB_TARGET=('--target=i386-efi' "--efi-directory=${USBMNT}" '--removable')
-	if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
+	if ! (set -x; ${PRIVILEGE_ELEVATION} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
 		echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
 		exit 1
 	fi
 	# GRUB Bug: Remove unneded file, ${USBMNT}/EFI/BOOT/BOOTIA32.EFI provides the bootloader
-	[[ -e "${USBMNT}/EFI/BOOT/grub.efi" ]] && ${CMD_PREFIX} rm -- "${USBMNT}/EFI/BOOT/grub.efi"
+	[[ -e "${USBMNT}/EFI/BOOT/grub.efi" ]] && ${PRIVILEGE_ELEVATION} rm -- "${USBMNT}/EFI/BOOT/grub.efi"
 fi
 
 
 # Copy GRUB2 configuration
-if ! (set -x; ${CMD_PREFIX} rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='i386-efi' --exclude='fonts' --exclude='icons/originals' -- "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
+if ! (set -x; rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='i386-efi' --exclude='fonts' --exclude='icons/originals' -- "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
 	echo 'ERROR: the rsync copy returned with an error exit status.'
 	exit 1
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d "${USBMNT}/boot/iso" ]] || ${CMD_PREFIX} mkdir -- "${USBMNT}/boot/iso"
+[[ -d "${USBMNT}/boot/iso" ]] || mkdir -- "${USBMNT}/boot/iso"
 echo 'GLIM installed! Time to populate the boot/iso directory.'
