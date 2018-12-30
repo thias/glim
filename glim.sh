@@ -7,6 +7,8 @@
 if (( EUID == 0 )); then
   echo 'ERROR: Do not run as root, use a user with full sudo access.'
   exit 1
+else
+  PRIVILEGE_ELEVATION='sudo --'
 fi
 
 # Sanity check : GRUB2
@@ -37,7 +39,7 @@ if ! command -v blkid &>/dev/null; then
   echo 'ERROR: blkid command not found.'
   exit 1
 fi
-USBDEV1="$(blkid -L GLIM)"
+USBDEV1="$(${PRIVILEGE_ELEVATION} blkid -L GLIM)"
 
 # Sanity check : we found one partition to use with matching label
 if [[ -z "$USBDEV1" ]]; then
@@ -90,8 +92,8 @@ if (( BIOS == 0 && EFI == 0 )); then
   exit 1
 fi
 
-# Select the install targets
 
+# Select the install targets
 if (( BIOS == 1 )); then
   read -r -n 1 -s -p 'Install GRUB for x86 BIOS? (Y/n) ' PROCEED
   if [[ "$PROCEED" == 'n' ]]; then
@@ -133,25 +135,19 @@ GRUB_COMMON_ARGS=("--boot-directory=${USBMNT}/boot" '--themes=' '--recheck')
 declare -a GRUB_TARGET
 if (( BIOS == 1 )); then
   GRUB_TARGET=('--target=i386-pc')
-  if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}" -- "${USBDEV}"); then
+  if ! (set -x; ${PRIVILEGE_ELEVATION} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}" -- "${USBDEV}"); then
     echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
     exit 1
   fi
 fi
 if (( EFI == 1 )); then
   GRUB_TARGET=('--target=x86_64-efi' "--efi-directory=${USBMNT}" '--removable')
-  if ! (set -x; ${CMD_PREFIX} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
+  if ! (set -x; ${PRIVILEGE_ELEVATION} "${GRUB2_INSTALL}" "${GRUB_TARGET[@]}" "${GRUB_COMMON_ARGS[@]}"); then
     echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
     exit 1
   fi
 fi
 
-# Check USB mount dir write permission, to use sudo if missing
-if [[ -w "${USBMNT}" ]]; then
-  CMD_PREFIX=''
-else
-  CMD_PREFIX='sudo'
-fi
 
 # Copy GRUB2 configuration
 if ! (set -x; rsync -rpt --delete --exclude='i386-pc' --exclude='x86_64-efi' --exclude='fonts' --exclude='icons/originals' -- "${GRUB2_CONF}/" "${USBMNT}/boot/${GRUB2_DIR}"); then
