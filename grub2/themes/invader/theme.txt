@@ -1,46 +1,57 @@
 # GRUB gfxmenu theme "invader".
 
 desktop-color: "#000"
-terminal-box: "terminal_box_*.png"
+message-color: "#000"
+title-text: ""
+desktop-image: "background.png"
 
 + boot_menu {
-    item_color = "#F33"
-    selected_item_color = "#FFF"
-    top = 20
-    left = 20
-    width = 100%-40
-    height = 100%-50
-    item_height = 24
-    icon_width = 24
-    icon_height = 24
-    item_padding = 0
-    item_icon_space = 10
-    item_spacing = 0
+  left = 40
+  width = 100%-80
+  top = 40
+  height = 100%-120
+  menu_pixmap_style = "menu_pixmap_style_*.png"
+
+  item_color = "#F33"
+  item_height = 24
+  item_icon_space = 8
+  item_spacing = 2
+
+  selected_item_color= "#FFF"
+  selected_item_pixmap_style = "selected_item_pixmap_style_*.png"
+
+  icon_height = 24
+  icon_width = 24
+
+  scrollbar = true
+  scrollbar_width = 20
+  scrollbar_thumb = "scrollbar_thumb_*.png"
+  scrollbar_frame = "scrollbar_frame_*.png"
 }
 
 + image {
-    file = "invader-220x160.png"
-    top = 20
-    left = 100%-240
+  file = "invader-220x160.png"
+  top = 20
+  left = 100%-240
 }
 
 + label {
-    text = "'Up', 'Down', 'Enter', 'Esc' to navigate, 'e' to edit options"
-    color = "#FFF"
-    align = center
-    top = 100%-54
-    left = 0
-    width = 100%
-    height = 20
+  text = "'Up', 'Down', 'Enter', 'Esc' to navigate, 'e' to edit options"
+  color = "#FFF"
+  align = "center"
+  left = 0
+  width = 100%
+  top = 100%-54
+  height = 20
 }
 
 + label {
-    text = "GLEE USB - http://matthias.saou.eu/ - v2.4"
-    color = "#FFF"
-    align = center
-    top = 100%-30
-    left = 0
-    width = 100%
-    height = 20
+  text = "GRUB2 Live ISO Multiboot - https://github.com/thias/glim/"
+  color = "#FFF"
+  align = "center"
+  left = 0
+  width = 100%
+  top = 100%-30
+  height = 20
 }
 
