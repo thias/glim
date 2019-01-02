@@ -23,6 +23,7 @@ DEBIAN_LIVE_LXDE_TORRENT='https://cdimage.debian.org/debian-cd/current-live/amd6
 DEBIAN_LIVE_MATE_TORRENT='https://cdimage.debian.org/debian-cd/current-live/amd64/bt-hybrid/debian-live-9.6.0-amd64-mate.iso.torrent'
 DEBIAN_LIVE_XFCE_TORRENT='https://cdimage.debian.org/debian-cd/current-live/amd64/bt-hybrid/debian-live-9.6.0-amd64-xfce.iso.torrent'
 DEBIAN_NETINST_TORRENT='https://cdimage.debian.org/debian-cd/current/amd64/bt-cd/debian-9.6.0-amd64-netinst.iso.torrent'
+DEBIAN_MINI_URL='http://ftp.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/mini.iso'
 BODHI_TORRENT='http://sourceforge.net/projects/bodhilinux/files/5.0.0/bodhi-5.0.0-64.iso.torrent/download'
 BODHI_APPPACK='http://sourceforge.net/projects/bodhilinux/files/5.0.0/bodhi-5.0.0-apppack-64.iso.torrent/download'
 BODHI_LEGACY='http://sourceforge.net/projects/bodhilinux/files/5.0.0/bodhi-5.0.0-apppack-64.iso.torrent/download'
@@ -65,7 +66,7 @@ check_cmd parallel
 
 TMP=$(mktemp -d --suffix='.glim.dl.tmp' 2>/dev/null || mktemp -d -t '.glim.dl.tmp')
 
-$CMD_PREFIX mkdir -p${USBMNT}/boot/iso/ubuntu
+$CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/ubuntu
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/centos
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/arch
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/antix
@@ -77,34 +78,40 @@ $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/kali
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/tails
 
 # prep downloads
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_ISO_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_SERVER_ISO_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_ISO_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_SERVER_ISO_URL" > $TMP/parallel-dl.sh
-#echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_DVD" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_KDE" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_GNOME" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --dir ${USBMNT}/boot/iso/arch --follow-torrent=mem $ARCH_MAGNET" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_x64-full.torrent" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_386-full.torrent" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_32_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_CINNAMON_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_GNOME_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_KDE_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_LXDE_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_MATE_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_XFCE_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_NETINST_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_APPPACK" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_LEGACY" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi -x2 -c $GPARTED_URL" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/kali --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $KALI_TORRENT" > $TMP/parallel-dl.sh
-echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/tails --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $TAILS_TORRENT" > $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_ISO_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_SERVER_ISO_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_ISO_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_SERVER_ISO_URL" >> $TMP/parallel-dl.sh
+#echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_DVD" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_KDE" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_GNOME" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --dir ${USBMNT}/boot/iso/arch --follow-torrent=mem $ARCH_MAGNET" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_x64-full.torrent" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_386-full.torrent" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_32_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_CINNAMON_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_GNOME_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_KDE_TORRENT" >> $TMP/parallel-dl.sh
+#echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_LXDE_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_MATE_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_XFCE_TORRENT" >> $TMP/parallel-dl.sh
+#echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_NETINST_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian -x2 -c $DEBIAN_MINI_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_APPPACK" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_LEGACY" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi -x2 -c $GPARTED_URL" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/kali --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $KALI_TORRENT" >> $TMP/parallel-dl.sh
+echo "$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/tails --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $TAILS_TORRENT" >> $TMP/parallel-dl.sh
+
+cat $TMP/parallel-dl.sh
 
 if [[ "$PARALLEL_JOBS" -gt "1" ]] ; then
   $PARALLEL -j $PARALLEL_JOBS -- < $TMP/parallel-dl.sh
 else
   bash $TMP/parallel-dl.sh
 fi
+
+rm $TMP/parallel-dl.sh
+rmdir $TMP
