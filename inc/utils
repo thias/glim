@@ -1,0 +1,70 @@
+#!/bin/bash
+# source this before glim scripts
+
+# Check that we are *NOT* running as root
+if [[ `id -u` -eq 0 ]]; then
+  echo "ERROR: Don't run as root, use a user with full sudo access."
+  exit 1
+fi
+
+# Sanity check : GRUB2
+if which grub2-install &>/dev/null; then
+  GRUB2_INSTALL="grub2-install"
+  GRUB2_DIR="grub2"
+elif which grub-install &>/dev/null; then
+  GRUB2_INSTALL="grub-install"
+  GRUB2_DIR="grub"
+fi
+if [[ -z "$GRUB2_INSTALL" ]]; then
+  echo "ERROR: grub2-install or grub-install commands not found."
+  exit 1
+fi
+
+# Sanity check : Our GRUB2 configuration
+GRUB2_CONF="`dirname $0`/grub2"
+if [[ ! -f ${GRUB2_CONF}/grub.cfg ]]; then
+  echo "ERROR: grub2/grub.cfg to use not found."
+  exit 1
+fi
+
+#
+# Find GLIM device (use the first if multiple found, you've asked for trouble!)
+#
+
+# Sanity check : blkid command
+if ! which blkid &>/dev/null; then
+  echo "ERROR: blkid command not found."
+  exit 1
+fi
+USBDEV1=`blkid -L GLIM | head -n 1`
+
+# Sanity check : we found one partition to use with matching label
+if [[ -z "$USBDEV1" ]]; then
+  echo "ERROR: no partition found with label 'GLIM', please create one."
+  exit 1
+fi
+echo "Found partition with label 'GLIM' : ${USBDEV1}"
+
+# Sanity check : our partition is the first and only one on the block device
+USBDEV=${USBDEV1%1}
+if [[ ! -b "$USBDEV" ]]; then
+  echo "ERROR: ${USBDEV} block device not found."
+  exit 1
+fi
+echo "Found block device where to install GRUB2 : ${USBDEV}"
+if [[ `ls -1 ${USBDEV}* | wc -l` -ne 2 ]]; then
+  echo "ERROR: ${USBDEV1} isn't the only partition on ${USBDEV}"
+  exit 1
+fi
+
+# Sanity check : our partition is mounted
+if ! grep -q -w ${USBDEV1} /proc/mounts; then
+  echo "ERROR: ${USBDEV1} isn't mounted"
+  exit 1
+fi
+USBMNT=`grep -w ${USBDEV1} /proc/mounts | cut -d ' ' -f 2`
+if [[ -z "$USBMNT" ]]; then
+  echo "ERROR: Couldn't find mount point for ${USBDEV1}"
+  exit 1
+fi
+echo "Found mount point for filesystem : ${USBMNT}"
