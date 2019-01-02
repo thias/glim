@@ -11,8 +11,6 @@ CENTOS_7_LIVE_KDE='http://repos.dfw.quadranet.com/centos/7.6.1810/isos/x86_64/Ce
 CENTOS_7_LIVE_GNOME='http://repos.dfw.quadranet.com/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1810.iso http://yum.tamu.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1810.iso http://mirror.dal10.us.leaseweb.net/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1810.iso'
 ARCH_MAGNET='magnet:?xt=urn:btih:8bdeb550636d3b523b2d2b3bd49d7b0fc731176c&dn=archlinux-2019.01.01-x86_64.iso&tr=udp://tracker.archlinux.org:6969&tr=http://tracker.archlinux.org:6969/announce'
 ANTERGOS_TORRENT='http://mirrors.antergos.com/iso/release/antergos-18.12-x86_64.iso.torrent'
-ANTIX_TORRENT='https://linuxtracker.org/index.php?page=torrent-details&id=f9bb66ddd15dfbb50fe0d2be0f72b82a7671fa02'
-ANTIX_32_TORRENT='https://linuxtracker.org/index.php?page=torrent-details&id=728f155c1192da03b07556cabdd0b7a0c7226bcd'
 CLONEZILLA_URL='https://osdn.net/frs/redir.php?m=gigenet&f=clonezilla%2F69912%2Fclonezilla-live-2.5.6-22-amd64.iso'
 CLONEZILLA_32_URL='https://osdn.net/frs/redir.php?m=constant&f=clonezilla%2F69912%2Fclonezilla-live-2.5.6-22-i686.iso'
 DEBIAN_TORRENT='https://cdimage.debian.org/debian-cd/current/amd64/bt-cd/debian-9.6.0-amd64-netinst.iso.torrent'
@@ -23,6 +21,7 @@ GPARTED_URL='https://sourceforge.net/projects/gparted/files/gparted-live-stable/
 KALI_TORRENT='https://images.offensive-security.com/kali-linux-2018.4-amd64.iso.torrent'
 TAILS_TORRENT='https://tails.boum.org/torrents/files/tails-amd64-3.11.torrent'
 SYSRESCUECD_URL='https://downloads.sourceforge.net/project/systemrescuecd/sysresccd-x86/5.3.2/systemrescuecd-x86-5.3.2.iso?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsystemrescuecd%2Ffiles%2Fsysresccd-x86%2F5.3.2%2Fsystemrescuecd-x86-5.3.2.iso%2Fdownload&ts=1546396872'
+THIS_CWD=$(pwd)
 
 check_cmd () {
   if ! type "$1" > /dev/null; then
@@ -127,8 +126,8 @@ $CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $ARCH_
 
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/antix
 cd ${USBMNT}/boot/iso/antix
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $ANTIX_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $ANTIX_32_TORRENT
+$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_x64-full.torrent
+$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_386-full.torrent
 
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/clonezilla
 cd ${USBMNT}/boot/iso/clonezilla
