@@ -59,67 +59,54 @@ fi
 
 check_cmd aria2c
 
-# Be nice and pre-create the directory, and mention it
-[[ -d ${USBMNT}/boot/iso ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso
-echo "GLIM installed! Time to populate the boot/iso directory."
+TMP=$(mktemp -d --suffix='.glim.dl.tmp' 2>/dev/null || mktemp -d -t '.glim.dl.tmp')
 
 # Ubuntu
 $CMD_PREFIX mkdir -p${USBMNT}/boot/iso/ubuntu
-cd ${USBMNT}/boot/iso/ubuntu
-$CMD_PREFIX aria2c -x2 -c $UBUNTU_1804_ISO_URL
-$CMD_PREFIX aria2c -x2 -c $UBUNTU_1804_SERVER_ISO_URL
-$CMD_PREFIX aria2c -x2 -c $UBUNTU_1810_ISO_URL
-$CMD_PREFIX aria2c -x2 -c $UBUNTU_1810_SERVER_ISO_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_ISO_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1804_SERVER_ISO_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_ISO_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/ubuntu $UBUNTU_1810_SERVER_ISO_URL
 ## Centos
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/centos
-cd ${USBMNT}/boot/iso/centos
-#$CMD_PREFIX aria2c -x2 -c $CENTOS_7_DVD
-$CMD_PREFIX aria2c -x2 -c $CENTOS_7_LIVE_KDE
-$CMD_PREFIX aria2c -x2 -c $CENTOS_7_LIVE_GNOME
+#$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_DVD
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_KDE
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/centos $CENTOS_7_LIVE_GNOME
 ## arch
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/arch
-cd ${USBMNT}/boot/iso/arch
-#$CMD_PREFIX aria2c -x2 -c $ARCH_ISO
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $ARCH_MAGNET
+$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --dir ${USBMNT}/boot/iso/arch --follow-torrent=mem $ARCH_MAGNET
 
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/antix
-cd ${USBMNT}/boot/iso/antix
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_x64-full.torrent
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_386-full.torrent
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_x64-full.torrent
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/antix --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem -T$THIS_CWD/torrents/antiX-17.3.1_386-full.torrent
 
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/clonezilla
-cd ${USBMNT}/boot/iso/clonezilla
-$CMD_PREFIX aria2c -x2 -c $CLONEZILLA_URL
-$CMD_PREFIX aria2c -x2 -c $CLONEZILLA_32_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_URL
+$CMD_PREFIX aria2c -x2 -c --dir ${USBMNT}/boot/iso/clonezilla $CLONEZILLA_32_URL
 ## debian
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/debian
-cd ${USBMNT}/boot/iso/debian
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_CINNAMON_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_GNOME_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_KDE_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_LXDE_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_MATE_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_XFCE_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_NETINST_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_CINNAMON_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_GNOME_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_KDE_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_LXDE_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_MATE_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_LIVE_XFCE_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/debian --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $DEBIAN_NETINST_TORRENT
 
 # bodhi
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/bodhi
-cd ${USBMNT}/boot/iso/bodhi
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_TORRENT
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_APPPACK
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_LEGACY
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_APPPACK
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $BODHI_LEGACY
 
 # gparted
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/bodhi
-cd ${USBMNT}/boot/iso/bodhi
-$CMD_PREFIX aria2c -x2 -c $GPARTED_URL
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/bodhi -x2 -c $GPARTED_URL
 
 # kali
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/kali
-cd ${USBMNT}/boot/iso/kali
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $KALI_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/kali --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $KALI_TORRENT
 
 # tails
 $CMD_PREFIX mkdir -p ${USBMNT}/boot/iso/tails
-cd ${USBMNT}/boot/iso/tails
-$CMD_PREFIX aria2c --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $TAILS_TORRENT
+$CMD_PREFIX aria2c --dir ${USBMNT}/boot/iso/tails --seed-time=1 --seed-ratio=1.0 -c --follow-torrent=mem $TAILS_TORRENT
