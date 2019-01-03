@@ -68,6 +68,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     porteus
     rhel
     sabayon
+    supergrub2disk
     sysrescd
     tails
     ubuntu
