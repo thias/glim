@@ -55,7 +55,6 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     centos
     clonezilla
     debian
-    doudoulinux
     elementary
     fedora
     gparted
