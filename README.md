@@ -72,6 +72,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     sysrescd
     tails
     ubuntu
+    void
     xubuntu
 
 Any missing sub-directory will have the matching boot menu entry automatically
