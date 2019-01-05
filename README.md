@@ -88,18 +88,14 @@ Note that on 32bit computers, all 64bit entries will be automatically hidden.
 Special Cases
 -------------
 
-### OpenELEC
+### LibreELEC
 
-OpenELEC isn't provided as ISO images, not is it able to find the `KERNEL` and
+LibreELEC isn't provided as ISO images, nor is it able to find the `KERNEL` and
 `SYSTEM` files it needs anywhere else than at the root of a filesystem.
-But it's useful to enable booting the OpenELEC installer by just copying both
-files from any single version (ION, Intel, Fusion, Generic, etc.) to the root
-of the USB memory stick, instead of first having to create a new separate USB
-memory just to run the installer.
-As of OpenELEC 3.0, Live booting is also supported, but :
- * The FAT filesystem's label must be 'GLIM'
- * The first launch will create a 512MB file as /STORAGE
-This can be tweaked as needed by editing inc-openelec.cfg.
+But it's useful to enable booting the installer by just copying both
+files to the root of the USB memory stick.
+Live booting is also supported, and the first launch will create a 512MB file
+as /STORAGE.
 
 
 Testing
