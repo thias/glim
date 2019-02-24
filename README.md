@@ -46,12 +46,13 @@ the filesystem label 'GLIM', just run (as a normal user) :
 
 Once finished, you may change the filesystem label to anything you like.
 
-The supported `boot/iso/` sub-directories (in alphabetical order) are :
+The supported distros (in alphabetical order) are :
 
     antergos
     antix
     arch
     bodhi
+    bunsenlabs
     centos
     clonezilla
     debian
@@ -75,12 +76,9 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     void
     xubuntu
 
-Any missing sub-directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution, just don't create the directory.
-
 Download the right ISO images to the newly created directory. If you require
 different versions, or just part of a distribution, edit the appropriate
-`boot/grub2/inc-*.cfg` file.
+`boot/grub2/glim/*.cfg` file.
 
 Note that on 32bit computers, all 64bit entries will be automatically hidden.
 
