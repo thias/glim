@@ -57,17 +57,20 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     debian
     elementary
     fedora
+    finnix
     gparted
     grml
     ipxe
     kali
     linuxmint
+    lubuntu
     manjaro
     netrunner
     peppermint
     porteus
     rhel
     sabayon
+    slitaz
     supergrub2disk
     sysrescd
     tails
