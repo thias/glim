@@ -61,6 +61,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     grml
     ipxe
     kali
+    kubuntu
     linuxmint
     manjaro
     netrunner
