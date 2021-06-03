@@ -1,4 +1,4 @@
-*This repository is a fork thias/glim with some PR merges.  
+*This repository is a fork thias/glim with some PR merged.  
 If you ask for PR here, I will merge them.*
 
 GRUB2 Live ISO Multiboot
