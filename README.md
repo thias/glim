@@ -1,3 +1,6 @@
+THIS REPO IS A FORK FROM thias/glim WITH PR MERGED.  
+If you do PR here, I will merge them.
+
 GRUB2 Live ISO Multiboot
 ========================
 
