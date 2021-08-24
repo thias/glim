@@ -1,3 +1,6 @@
+*This repository is a fork thias/glim with some PR merged.  
+If you ask for PR here, I will merge them.*
+
 GRUB2 Live ISO Multiboot
 ========================
 
@@ -57,10 +60,12 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     debian
     elementary
     fedora
+    gentoo
     gparted
     grml
     ipxe
     kali
+    kubuntu
     linuxmint
     manjaro
     netrunner
@@ -71,6 +76,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     supergrub2disk
     sysrescd
     tails
+    trisquel
     ubuntu
     void
     xubuntu
@@ -139,6 +145,5 @@ All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
 copyright somewhere, do what you want with it.
 The background is "Wallpaper grey" © 2008 payalnic (DeviantArt)
-The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
+The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details
 as well as the source code, see http://www.gnu.org/software/grub/
-
