@@ -156,6 +156,14 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
+# Copy autorun files
+echo "Running rsync -rpt autorun/ ${USBMNT}/ ..."
+${CMD_PREFIX} rsync -rpt autorun/ ${USBMNT}/
+if [[ $? -ne 0 ]]; then
+  echo "ERROR: the rsync copy returned with an error exit status."
+  exit 1
+fi
+
 # Be nice and pre-create the directory, and mention it
 [[ -d ${USBMNT}/boot/iso ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso
 echo "GLIM installed! Time to populate the boot/iso directory."
