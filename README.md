@@ -132,6 +132,53 @@ create a GitHub pull request which includes :
  * An updated supported directories list in this README file.
 
 
+ISOs
+----
+
+Links to help you to find images:
+(Some distribution needs special image to run in Live way, like alternate...)
+
+    almalinux       (Live)  https://repo.almalinux.org/almalinux/
+    antix                   https://antixlinux.com/
+    arch                    https://archlinux.org/
+    bodhi                   https://www.bodhilinux.com/
+    centos                  https://www.centos.org/
+    clonezilla              https://clonezilla.org/
+                              i586 v2.4.2-61
+                              i486 v2.2.4-12
+    debian                  https://www.debian.org/
+    elementary              https://elementary.io/
+    fedora                  https://getfedora.org/
+    finnix                  https://www.finnix.org/
+                              i386 v109
+    gparted                 https://gparted.org/
+                              i586 v0.24.0-2 
+                              ?x86 v0.8.0-5
+    grml                    https://grml.org/
+    ipxe                    https://ipxe.org/
+    kali                    https://www.kali.org/
+    linuxmint               https://linuxmint.com/
+    lubuntu                 https://lubuntu.me/
+                              i386 v18.04.5
+    manjaro                 https://manjaro.org/
+    netrunner               https://www.netrunner.com/
+    peppermint              https://peppermintos.com/
+    porteus                 http://www.porteus.org/
+    rhel                    https://www.redhat.com
+    rockylinux      (Alt)   https://rockylinux.org/alternative-images/
+    supergrub2disk          https://www.supergrubdisk.org/super-grub2-disk/
+    sysrescd                https://www.system-rescue.org/
+                              i686 v9.03
+                               x86 v5.3.2
+    tails                   https://tails.boum.org/
+    ubuntu                  https://ubuntu.com/
+    void                    https://voidlinux.org/
+    xubuntu                 https://xubuntu.org/
+                              i386 v18.04.5
+
+To run on very old CPU models check supported version.
+
+
 ---
 Copyleft 2012-2017 Matthias Saou http://matthias.saou.eu/
 
