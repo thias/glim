@@ -67,7 +67,6 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     peppermint
     porteus
     rhel
-    sabayon
     supergrub2disk
     sysrescd
     tails
