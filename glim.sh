@@ -103,7 +103,7 @@ if [[ $EFI == true && ! -d /usr/lib/grub/x86_64-efi ]]; then
     echo "ERROR: neither support for BIOS or EFI was found"
     exit 1
   else
-    echo "WARNING: no /usr/lib/grub/x86_64-efi dir (grub2-efi-x64-modules rpm missing?)"
+    echo "WARNING: no /usr/lib/grub/x86_64-efi dir (grub2-efi-x64-modules rpm or grub-efi-amd64-bin deb missing?)"
   fi
 fi
 
