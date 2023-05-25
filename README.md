@@ -48,6 +48,7 @@ Once finished, you may change the filesystem label to anything you like.
 
 The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
+    almalinux
     antergos
     antix
     arch
