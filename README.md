@@ -51,6 +51,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     almalinux
     antix
     arch
+    artix
     bodhi
     centos
     clonezilla
