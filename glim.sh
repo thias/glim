@@ -158,5 +158,10 @@ fi
 
 # Be nice and pre-create the directory, and mention it
 [[ -d ${USBMNT}/boot/iso ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso
-echo "GLIM installed! Time to populate the boot/iso directory."
+echo "GLIM installed! Time to populate the boot/iso/ sub-directories."
+
+# Now also pre-create all supported sub-directories since empty are ignored
+for DIR in $(sed -E -n 's/^    ([a-z]+)$/\1/p' `dirname $0`/README.md); do
+  [[ -d ${USBMNT}/boot/iso/${DIR} ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso/${DIR}
+done
 

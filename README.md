@@ -67,25 +67,23 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     linuxmint
     manjaro
     netrunner
+    openbsd
     peppermint
     porteus
     rhel
     rockylinux
     supergrub2disk
-    sysrescd
+    systemrescue
     tails
     ubuntu
     void
     xubuntu
 
-Any missing sub-directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution, just don't create the directory.
+Any unpopulated directory will have the matching boot menu entry automatically
+disabled, so to skip any distribution, just don't copy any files into it.
 
-Download the right ISO images to the newly created directory. If you require
-different versions, or just part of a distribution, edit the appropriate
-`boot/grub2/inc-*.cfg` file.
-
-Note that on 32bit computers, all 64bit entries will be automatically hidden.
+Download the right ISO image(s) to the matching directory. If you require
+boot parameter tweaks, edit the appropriate `boot/grub2/inc-*.cfg` file.
 
 
 Special Cases
@@ -125,23 +123,25 @@ Contributing
 ------------
 
 If you find GLIM useful but the configuration of the OS you require is missing
-or simply outdated, please feel free to contribute! What you will need is
+or simply outdated, please feel free to contribute! What you will need is to
 create a GitHub pull request which includes :
  * All changes properly and fully tested.
  * New entries added similarly to the existing ones :
    * In alphabetical order.
-   * With all possible relevant variants (i.e. not just the one spin you want).
- * An original icon of high quality, and a shrunk 24x24 px version.
+   * With all possible variants supported (i.e. not just the one spin you want).
+ * An original icon of high quality, and a shrunk 24x24 png version. Using
+   `convert -size 24x24 -background 'rgba(0,0,0,0)' original.svg small.png`
+   may work.
  * An updated supported directories list in this README file.
 
 
 ---
-Copyleft 2012-2017 Matthias Saou http://matthias.saou.eu/
+Copyleft 2012-2023 Matthias Saou http://matthias.saou.eu/
 
 All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
 copyright somewhere, do what you want with it.
 The background is "Wallpaper grey" © 2008 payalnic (DeviantArt)
-The ascii.pf2 font comes from GRUB, which is GPLv3+ licensed. For more details 
-as well as the source code, see http://www.gnu.org/software/grub/
+The `ascii.pf2` font comes from GRUB, which is GPLv3+ licensed. For more
+details as well as the source code, see http://www.gnu.org/software/grub/
 
