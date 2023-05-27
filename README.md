@@ -98,6 +98,28 @@ files to the root of the USB memory stick.
 Live booting is also supported, and the first launch will create a 512MB file
 as /STORAGE.
 
+### Ubuntu
+
+Recent Ubuntu desktop iso images bundle multiple versions on the Nvidia
+driver. With that, the images are over 4GB, the FAT32 max file size. For example
+`ubuntu-20.04.6-desktop-amd64.iso` is 4.1GB, `ubuntu-22.04.2-desktop-amd64.iso`
+is 4.6GB. The driver is not required in a live system, it can be removed to make
+an image fit into 4GB. For example, with 22.04.2 image in the current dir:
+
+```
+mkdir slim
+iso=ubuntu-22.04.2-desktop-amd64.iso
+
+xorriso -indev "$iso" -outdev slim/"$iso" \
+    -boot_image any replay -rm_r /pool/restricted/{l,n} --
+```
+
+Now you can copy `slim/ubuntu-22.04.2-desktop-amd64.iso` to your FAT32 formatted
+GLIM USB stick.
+
+Some Ubuntu flavours also bundle the Nvidia driver (like Kubuntu), some don't
+(like Xubuntu). The same trick can be used with the former.
+
 
 Testing
 -------
