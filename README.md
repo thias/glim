@@ -66,6 +66,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     kubuntu
     linuxmint
     manjaro
+    memtest
     netrunner
     openbsd
     peppermint
@@ -97,6 +98,11 @@ But it's useful to enable booting the installer by just copying both
 files to the root of the USB memory stick.
 Live booting is also supported, and the first launch will create a 512MB file
 as /STORAGE.
+
+### Memtest86+
+
+The `.iso` file doesn't work. Use either the `.bin` or the `.efi` depending on
+the boot mode used.
 
 ### Ubuntu
 
