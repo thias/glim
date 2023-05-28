@@ -90,6 +90,11 @@ boot parameter tweaks, edit the appropriate `boot/grub2/inc-*.cfg` file.
 Special Cases
 -------------
 
+### iPXE
+
+The `.iso` files don't work when booting using EFI, you simply need to use
+`.efi` files instead.
+
 ### LibreELEC
 
 LibreELEC isn't provided as ISO images, nor is it able to find the `KERNEL` and
