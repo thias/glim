@@ -129,6 +129,8 @@ an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
 17), that way you can easily and quickly test changes.
 Make sure you unmount the disk from the host OS before you start the KVM
 virtual machine that uses it.
+For UEFI testing, you'll need to use one of the `/usr/share/edk2/ovmf/*.fd`
+firmwares.
 
 
 Troubleshooting
