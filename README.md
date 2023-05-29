@@ -86,6 +86,38 @@ disabled, so to skip any distribution, just don't copy any files into it.
 Download the right ISO image(s) to the matching directory. If you require
 boot parameter tweaks, edit the appropriate `boot/grub2/inc-*.cfg` file.
 
+Items order in the menu
+------------
+
+Menu items for a distro are ordered by modification time of the iso files
+starting from the most recent ones. If some iso files have the same mtime, their
+menu items are ordered alphabetically.
+
+Here is a generic idea how to keep it nicely ordered when you have multiple
+releases of some distro:
+
+- touch your **release** iso files with the release date
+- touch your **point release** iso files with the original release date plus a
+  day per point. This is a way to ensure point releases never pop above the next
+  release like Debian 10.13.0 (released 10 Sep 2022) would still be below Debian
+  11.0.0 (released 14 August 2021)
+- in case there are multiple flavours of some iso but the version is the same,
+  touch all of them with the same date for the whole group to be ordered
+  alphabetically
+
+Sample ordered menu:
+
+|                                    | iso mtime               |
+|------------------------------------|-------------------------|
+| Debian Live 12.0.0 amd64 standard  | 10 June 2023            |
+| Debian Live 11.7.0 amd64 gnome     | 14 August 2021 + 7 days |
+| Debian Live 11.7.0 amd64 kde       | 14 August 2021 + 7 days |
+| Debian Live 11.7.0 amd64 standard  | 14 August 2021 + 7 days |
+| Debian Live 11.0.0 amd64 gnome     | 14 August 2021          |
+| Debian Live 11.0.0 amd64 kde       | 14 August 2021          |
+| Debian Live 11.0.0 amd64 standard  | 14 August 2021          |
+| Debian Live 10.13.0 amd64 standard | 6 July 2019 + 13 days   |
+| Debian Live 9.13.0 amd64 standard  | 17 June 2017 + 13 days  |
 
 Special Cases
 -------------
