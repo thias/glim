@@ -161,7 +161,12 @@ fi
 echo "GLIM installed! Time to populate the boot/iso/ sub-directories."
 
 # Now also pre-create all supported sub-directories since empty are ignored
-for DIR in $(sed -E -n 's/^    ([a-z]+)$/\1/p' `dirname $0`/README.md); do
+args=(
+  -E -n
+  '/\(distro-list-start\)/,/\(distro-list-end\)/{s,^\s+([a-z0-9]+)$,\1,p}'
+)
+
+for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
   [[ -d ${USBMNT}/boot/iso/${DIR} ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso/${DIR}
 done
 
