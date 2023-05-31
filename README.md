@@ -48,6 +48,8 @@ Once finished, you may change the filesystem label to anything you like.
 
 The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
+[//]: # (distro-list-start)
+
     almalinux
     antix
     arch
@@ -79,6 +81,8 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     ubuntu
     void
     xubuntu
+
+[//]: # (distro-list-end)
 
 Any unpopulated directory will have the matching boot menu entry automatically
 disabled, so to skip any distribution, just don't copy any files into it.
