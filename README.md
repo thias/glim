@@ -71,6 +71,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     memtest
     netrunner
     openbsd
+    opensuse
     peppermint
     porteus
     rhel
