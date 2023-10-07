@@ -79,6 +79,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
     porteus
     rhel
     rockylinux
+    slitaz
     supergrub2disk
     systemrescue
     tails
