@@ -24,9 +24,10 @@ Disadvantages :
 
 My experience has been that the safest filesystem to use is FAT32
 (surprisingly!), though it will mean that ISO images greater than 4GB won't be
-supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4
-and even NTFS, but the boot of the distributions must also support it, which
-isn't the case for many with NTFS, for instance. So FAT32 stays the safe bet.
+supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4,
+NTFS and exFAT, but the boot of the distributions must also support it, which
+isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and exFAT
+(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet.
 
 
 Screenshots
@@ -40,7 +41,8 @@ Installation
 ------------
 
 Once you have your USB memory with a single partition formatted as FAT32 with
-the filesystem label 'GLIM', just run (as a normal user) :
+the filesystem label 'GLIM', mount it, clone this git repository and just run
+(as a normal user) :
 
     ./glim.sh
 
@@ -50,42 +52,43 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
 [//]: # (distro-list-start)
 
-    almalinux
-    antix
-    arch
-    artix
-    bodhi
-    calculate
-    centos
-    clonezilla
-    debian
-    elementary
-    fedora
-    finnix
-    gentoo
-    gparted
-    grml
-    ipxe
-    kali
-    kubuntu
-    linuxmint
-    lubuntu
-    manjaro
-    memtest
-    netrunner
-    openbsd
-    opensuse
-    peppermint
-    porteus
-    rhel
-    rockylinux
-    slitaz
-    supergrub2disk
-    systemrescue
-    tails
-    ubuntu
-    void
-    xubuntu
+    [almalinux](https://almalinux.org/) - _Live Media_ only
+    [antix](https://antixlinux.com/)
+    [arch](https://archlinux.org/)
+    [artix](https://artixlinux.org/)
+    [bodhi](https://www.bodhilinux.com/)
+    [calculate](https://wiki.calculate-linux.org/desktop)
+    ~~[centos](https://www.centos.org/)~~ - _Live_ was discontinued
+    [clonezilla](https://clonezilla.org/)
+    [debian](https://www.debian.org/CD/live/) - _live_ & `mini.iso`
+    [elementary](https://elementary.io/)
+    [fedora](https://fedoraproject.org/)
+    [finnix](https://www.finnix.org/)
+    [gentoo](https://www.gentoo.org/)
+    [gparted](https://gparted.org/)
+    [grml](https://grml.org/)
+    [ipxe](https://ipxe.org/)
+    [kali](https://www.kali.org/)
+    [kubuntu](https://kubuntu.org/)
+    [libreelec](https://libreelec.tv/)
+    [linuxmint](https://linuxmint.com/)
+    [lubuntu](https://lubuntu.me/)
+    [manjaro](https://manjaro.org/)
+    [memtest](https://memtest.org/) - _Binary Files (.bin/.efi)_
+    [netrunner](https://www.netrunner.com/)
+    [openbsd](https://www.openbsd.org/)
+    [opensuse](https://www.opensuse.org/) - _Tumbleweed_
+    [peppermint](https://peppermintos.com/)
+    [porteus](http://www.porteus.org/)
+    [rhel](https://www.redhat.com/rhel) - installation only
+    [rockylinux](https://rockylinux.org/)
+    [slitaz](https://slitaz.org/)
+    [supergrub2disk](https://www.supergrubdisk.org/)
+    [systemrescue](https://www.system-rescue.org/)
+    [tails](https://tails.net/)
+    [ubuntu](https://ubuntu.com/)
+    [void](https://voidlinux.org/)
+    [xubuntu](https://xubuntu.org/)
 
 [//]: # (distro-list-end)
 

@@ -163,7 +163,7 @@ echo "GLIM installed! Time to populate the boot/iso/ sub-directories."
 # Now also pre-create all supported sub-directories since empty are ignored
 args=(
   -E -n
-  '/\(distro-list-start\)/,/\(distro-list-end\)/{s,^\s+([a-z]+)$,\1,p}'
+  '/\(distro-list-start\)/,/\(distro-list-end\)/{s,^\s+\[([a-z0-9]+)\].*$,\1,p}'
 )
 
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
