@@ -90,7 +90,7 @@ The supported `boot/iso/` sub-directories (in A–Z order) are:
 
 [//]: # (distro-list-end)
 
-Unpopulated directories turns its matching boot menu entry off,
+Unpopulated directories turns off the matching boot menu entry,
 so skip any distribution by not copying any files into it.
 
 Download the right ISO image(s) to the matching directory.
@@ -107,13 +107,13 @@ their menu items are ordered A–Z.
 Here is a generic idea of how to keep it nicely ordered with multiple
 releases of some distro:
 
-- Touch your **release** ISO files with the release date
-- Touch your **point release** ISO files with the original release date, plus a
+- `touch` your **release** ISO files with the release date
+- `touch` your **point release** ISO files with the original release date, plus a
   day per point. This is a way to ensure point releases never pop above the next
   release like Debian 10.13.0 (released 10 Sep 2022) would still be below Debian
   11.0.0 (released 14 Aug 2021)
 - In case there are multiple flavours of some ISO, but the version is the same
-  —touch all of them with the same date to order the whole group A–Z
+ `touch` all of them with the same date to order the whole group A–Z
   
 Sample-ordered menu:
 
@@ -140,7 +140,7 @@ The `.iso` files don't work when booting using EFI, you simply need to use
 ### LibreELEC
 
 LibreELEC provide no ISO images, nor is able to find the `KERNEL` and
-`SYSTEM` files it needs anywhere else than at the root of a filesystem.
+`SYSTEM` files it needs, other than if placed at the root of a filesystem.
 But it's useful to enable booting the installer by just copying both
 files to the root of the USB memory stick.
 Live booting is also supported, and the first launch will create a 512 MB
