@@ -79,6 +79,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`openbsd`](https://www.openbsd.org/)
 * [`opensuse`](https://www.opensuse.org/) - _Tumbleweed_
 * [`peppermint`](https://peppermintos.com/)
+* [`popos`](https://pop.system76.com/)
 * [`porteus`](http://www.porteus.org/)
 * [`rhel`](https://www.redhat.com/rhel) - installation only
 * [`rockylinux`](https://rockylinux.org/)
