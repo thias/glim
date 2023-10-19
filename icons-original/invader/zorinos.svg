@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" height="650" width="750" id="svg2" inkscape:version="0.92.3 (2405546, 2018-03-11)" sodipodi:docname="Vector.svg" inkscape:export-filename="/home/zorinos/Dropbox/Zorin Group/Branding/Logo/Icon/Zorin.png" inkscape:export-xdpi="90" inkscape:export-ydpi="90">
+  <metadata id="metadata10">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title/>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs8"/>
+  <sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="3440" inkscape:window-height="1353" id="namedview6" showgrid="false" showguides="false" inkscape:guide-bbox="true" inkscape:zoom="0.5" inkscape:cx="90.23565" inkscape:cy="237.60556" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" inkscape:current-layer="svg2">
+    <sodipodi:guide orientation="0,1" position="62.640625,216.00391" id="guide3767" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="367.80859,434" id="guide3769" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="554.72266,650" id="guide2987" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="562.4961,648.09375" id="guide2989" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="621.19141,542.00391" id="guide2991" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="624.80469,543.91016" id="guide2995" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="187.49609,647.97657" id="guide2997" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="125.19141,543.91016" id="guide2999" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="62.878907,432.15235" id="guide3001" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="0,321.37891" id="guide3003" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="750,324.23828" id="guide3007" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="687.11328,214.01563" id="guide3009" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="455.32031,108" id="guide3011" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="453.60938,0" id="guide3013" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="288.1211,215.88672" id="guide3019" inkscape:locked="false"/>
+    <sodipodi:guide orientation="1,0" position="461.86719,435.44531" id="guide3021" inkscape:locked="false"/>
+    <sodipodi:guide orientation="0,1" position="2.8242188,325" id="guide3797" inkscape:locked="false"/>
+  </sodipodi:namedview>
+  <g id="g4155" style="fill:#15a6f0;fill-opacity:1">
+    <path style="fill:#15a6f0;fill-opacity:1;stroke:none" d="m 125,542 62.35291,108 375.29027,0 L 625,542 z" id="path3795" inkscape:connector-curvature="0"/>
+    <path style="fill:#15a6f0;fill-opacity:1;stroke:none" d="M 750,324.99804 687.10301,434 288,434 687.10301,216 z" id="path3803" inkscape:connector-curvature="0"/>
+    <path inkscape:connector-curvature="0" id="path3801" d="M 0,325.00196 62.896988,216 462,216 62.896988,434 z" style="fill:#15a6f0;fill-opacity:1;stroke:none"/>
+    <path inkscape:connector-curvature="0" id="path3025" d="M 125,108 187.35291,0 562.64318,0 625,108 z" style="fill:#15a6f0;fill-opacity:1;stroke:none"/>
+  </g>
+</svg>

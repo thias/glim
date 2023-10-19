@@ -90,6 +90,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`ubuntu`](https://ubuntu.com/)
 * [`void`](https://voidlinux.org/)
 * [`xubuntu`](https://xubuntu.org/)
+* [`zorinos`](https://zorin.com/os/)
 
 [//]: # (distro-list-end)
 
