@@ -88,6 +88,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`supergrub2disk`](https://www.supergrubdisk.org/)
 * [`systemrescue`](https://www.system-rescue.org/)
 * [`tails`](https://tails.net/)
+* [`ubuntubudgie`](https://ubuntubudgie.org/)
 * [`ubuntu`](https://ubuntu.com/)
 * [`void`](https://voidlinux.org/)
 * [`xubuntu`](https://xubuntu.org/)
