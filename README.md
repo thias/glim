@@ -1,34 +1,32 @@
-GRUB2 Live ISO Multiboot
-========================
+GLIM — GRUB2 Live ISO Multiboot
+===============================
 
-https://github.com/thias/glim | http://glee.thias.es/GLIM
+https://github.com/thias/glim | https://glee.thias.es/GLIM
 
 
 Overview
 --------
 
-GLIM is a set of grub configuration files to turn a simple VFAT formatted USB
-memory stick with many GNU/Linux distribution ISO images into a neat device
-from which many different Live environments can be used.
+_Boot many differetn GNU/Linux live environments by putting their ISOs onto VFAT-formatted USB memory_.
 
-Advantages over extracting files or using special Live USB creation tools :
+ * A single USB memory can hold all live environments (the limit is its size).
+ * ISOs stay available to burn real CDs or DVDs.
+ * One file per distro is easy to handle (vs. 100+ files in the images).
+ * No files to extract.
+ * No special live USB-creation tools.
 
- * A single USB memory can hold all Live environments (the limit is its size)
- * ISO images stay available to burn real CDs or DVDs
- * ISO images are quick to manipulate (vs. hundreds+ files)
+Disadvantages:
 
-Disadvantages :
+ * Each distro needs support as specific GRUB configuration files in GLIM. \
+ * No persistent files for distributions which normally support it, \
+   so putting aside space on the installation media for files that \
+   survive a reboot (in for example Ubuntu) will not work.
+ * Setting up isn't as easy as a simple `cat` from the ISO image to a block device.
 
- * There is no persistence overlay for distributions which normally support it
- * Setting up isn't as easy as a simple cat from the ISO image to a block device
-
-My experience has been that the safest filesystem to use is FAT32
-(surprisingly!), though it will mean that ISO images greater than 4GB won't be
-supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4,
-NTFS and exFAT, but the boot of the distributions must also support it, which
-isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and exFAT
-(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet.
-
+FAT32 is the safest filesystem, though it means no 4 GB+ ISOs. \
+Ext3/ext4 and other filesystems supported by GRUB 2 also work. \
+\*exFAT means no Ubuntu, but Fedora works. \
+\*NTFS means no Fedora, but Ubuntu works.
 
 Screenshots
 -----------
@@ -36,20 +34,18 @@ Screenshots
 ![Main Menu](https://github.com/thias/glim/raw/master/screenshots/GLIM-3.0-shot1.png)
 ![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-3.0-shot2.png)
 
-
 Installation
 ------------
 
-Once you have your USB memory with a single partition formatted as FAT32 with
-the filesystem label 'GLIM', mount it, clone this git repository and just run
-(as a normal user) :
+Once your USB memory has a single partition formatted as FAT32 with \
+the filesystem label 'GLIM', mount it, clone this Git repository and \
+just run (as a normal user):
 
     ./glim.sh
 
-Once finished, you may change the filesystem label to anything you like.
+Once finished, optionally change the filesystem label.
 
-The supported `boot/iso/` sub-directories (in alphabetical order) are :
-
+The supported `boot/iso/` sub-directories (in A–Z order):
 [//]: # (distro-list-start)
 
 * [`almalinux`](https://almalinux.org/) - _Live Media only_
@@ -70,7 +66,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`ipxe`](https://ipxe.org/) - _.iso or .efi_
 * [`kali`](https://www.kali.org/)
 * [`kubuntu`](https://kubuntu.org/)
-* [`libreelec`](https://libreelec.tv/)
+* ~~[`libreelec`](https://libreelec.tv/)~~ - currently broken
 * [`linuxmint`](https://linuxmint.com/)
 * [`lubuntu`](https://lubuntu.me/)
 * [`manjaro`](https://manjaro.org/)
@@ -96,41 +92,38 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
 [//]: # (distro-list-end)
 
-Any unpopulated directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution, just don't copy any files into it.
+Boot-menu entries are not shown when their respective folders are empty, \
+so skip any distribution by not copying any files into it.
 
-Download the right ISO image(s) to the matching directory. If you require
-boot parameter tweaks, edit the appropriate `boot/grub2/inc-*.cfg` file.
+Download the ISO image(s) to the respective matching directory. \
+Optionally, add boot parameter tweaks by editing the respective
+`boot/grub2/inc-*.cfg` file.
 
-Items order in the menu
-------------
+Item order in the menu
+----------------------
 
-Menu items for a distro are ordered by modification time of the iso files
-starting from the most recent ones. If some iso files have the same mtime, their
-menu items are ordered alphabetically.
+More recently edited ISO-files are listed first, and otherwise A–Z.
 
-Here is a generic idea how to keep it nicely ordered when you have multiple
-releases of some distro:
+Kep it nicely ordered if you have multiple releases of a distro:
 
-- touch your **release** iso files with the release date
-- touch your **point release** iso files with the original release date plus a
-  day per point. This is a way to ensure point releases never pop above the next
-  release like Debian 10.13.0 (released 10 Sep 2022) would still be below Debian
-  11.0.0 (released 14 August 2021)
-- in case there are multiple flavours of some iso but the version is the same,
-  touch all of them with the same date for the whole group to be ordered
-  alphabetically
+- Order by release date: `touch` your **release** ISO files with the release date.
+- Prevent point releases from being listed above their successors:
+  `touch` the **point release** (for example Debian 10.13.0 (released 10 Sep 2022)
+  ISO files with the original release date, plus a day per point
+  to keep it below newer Debian releases (like 11.0.0 (released 14 Aug 2021).
+- Order anything A–Z: `touch` many ISOs with the same date to list them alphabetically.
+  Useful for multiple flavours of one version of an ISO .
+ 
+Sample-ordered menu:
 
-Sample ordered menu:
-
-|                                    | iso mtime               |
+|                                    | ISO mtime               |
 |------------------------------------|-------------------------|
 | Debian Live 12.0.0 amd64 standard  | 10 June 2023            |
-| Debian Live 11.7.0 amd64 gnome     | 14 August 2021 + 7 days |
-| Debian Live 11.7.0 amd64 kde       | 14 August 2021 + 7 days |
+| Debian Live 11.7.0 amd64 GNOME     | 14 August 2021 + 7 days |
+| Debian Live 11.7.0 amd64 KDE       | 14 August 2021 + 7 days |
 | Debian Live 11.7.0 amd64 standard  | 14 August 2021 + 7 days |
-| Debian Live 11.0.0 amd64 gnome     | 14 August 2021          |
-| Debian Live 11.0.0 amd64 kde       | 14 August 2021          |
+| Debian Live 11.0.0 amd64 GNOME     | 14 August 2021          |
+| Debian Live 11.0.0 amd64 KDE       | 14 August 2021          |
 | Debian Live 11.0.0 amd64 standard  | 14 August 2021          |
 | Debian Live 10.13.0 amd64 standard | 6 July 2019 + 13 days   |
 | Debian Live 9.13.0 amd64 standard  | 17 June 2017 + 13 days  |
@@ -140,30 +133,20 @@ Special Cases
 
 ### iPXE
 
-The `.iso` files don't work when booting using EFI, you simply need to use
-`.efi` files instead.
-
-### LibreELEC
-
-LibreELEC isn't provided as ISO images, nor is it able to find the `KERNEL` and
-`SYSTEM` files it needs anywhere else than at the root of a filesystem.
-But it's useful to enable booting the installer by just copying both
-files to the root of the USB memory stick.
-Live booting is also supported, and the first launch will create a 512MB file
-as /STORAGE.
+Use `.efi` files, as`.iso` files don't work when booting in EFI mode.
 
 ### Memtest86+
 
-The `.iso` file doesn't work. Use either the `.bin` or the `.efi` depending on
-the boot mode used.
+Use either the `.bin` or the `.efi` depending on the boot mode used, \
+as the The `.iso` file doesn't work.
 
 ### Ubuntu
 
-Recent Ubuntu desktop iso images bundle multiple versions on the Nvidia
-driver. With that, the images are over 4GB, the FAT32 max file size. For example
-`ubuntu-20.04.6-desktop-amd64.iso` is 4.1GB, `ubuntu-22.04.2-desktop-amd64.iso`
-is 4.6GB. The driver is not required in a live system, it can be removed to make
-an image fit into 4GB. For example, with 22.04.2 image in the current dir:
+Removing the multiple Nvidia driver versions in recent Ubuntu desktop ISOs \
+can help fit images into the 4 GiB allowed on FAT32 file systems.
+`ubuntu-20.04.6-desktop-amd64.iso` is 4.1 GB, `ubuntu-22.04.2-desktop-amd64.iso` is 4.6 GB. \
+(The driver is not required in a live system.) \
+For example, with 22.04.2 image in the current dir:
 
 ```
 mkdir slim
@@ -173,58 +156,54 @@ xorriso -indev "$iso" -outdev slim/"$iso" \
     -boot_image any replay -rm_r /pool/restricted/{l,n} --
 ```
 
-Now you can copy `slim/ubuntu-22.04.2-desktop-amd64.iso` to your FAT32 formatted
-GLIM USB stick.
+Then copy new `slim/ubuntu-22.04.2-desktop-amd64.iso` to your FAT32-formatted \
+GLIM USB-stick.
 
-Some Ubuntu flavours also bundle the Nvidia driver (like Kubuntu), some don't
-(like Xubuntu). The same trick can be used with the former.
-
+It also works for Kubuntu, \
+but not with Xubuntu which does not have multiple Nvidia-driver versions.
 
 Testing
 -------
 
-With KVM it should "just work". The `/dev/sdx` device should be configured as
-an IDE or SATA disk (for some reason, as USB disk didn't work for me on Fedora
-17), that way you can easily and quickly test changes.
-Make sure you unmount the disk from the host OS before you start the KVM
-virtual machine that uses it.
-For UEFI testing, you'll need to use one of the `/usr/share/edk2/ovmf/*.fd`
+With KVM it should "just work". \
+The `/dev/sdx` device should be configured as an IDE or SATA disk, \
+that way you can easily and quickly test changes. \
+(For some reason, as USB disk doesn't work on Fedora 17) \
+Ensure you unmount the disk from the host OS before starting the KVM \
+virtual machine that uses it. \
+For UEFI testing, you need to use one of the `/usr/share/edk2/ovmf/*.fd` \
 firmwares.
-
 
 Troubleshooting
 ---------------
 
-If you have any problem to boot, for instance stuck at the GRUB prompt before
-the menu, try re-installing.
-If you have other exotic GRUB errors, such as garbage text read instead of the
-configuration directives, try re-formatting your USB memory from scratch.
-I've seen weird things happen...
-
+Try re-installing if booting is stuck at the GRUB prompt (before the GLIM menu). \
+Re-format your USB memory from scratch for other exotic GRUB errors, \
+such as garbage text read instead of the configuration directives,  \
+and/or persist in your belief that you are of sound mind should strangeness \
+increase or continue.
 
 Contributing
 ------------
 
-If you find GLIM useful but the configuration of the OS you require is missing
-or simply outdated, please feel free to contribute! What you will need is to
-create a GitHub pull request which includes :
+Add the configuration file for missing or outdated OSes:
+
+Create a GitHub PR including:
  * All changes properly and fully tested.
- * New entries added similarly to the existing ones :
-   * In alphabetical order.
-   * With all possible variants supported (i.e. not just the one spin you want).
- * An original icon of high quality, and a shrunk 24x24 png version. Using
+ * New entries added similarly to the existing ones:
+   * In A–Z order. \
+   With all possible variants supported (i.e. not just the one spin you want).
+ * An original icon of high quality, and a shrunk 24x24 PNG version. \
    `convert -size 24x24 -background 'rgba(0,0,0,0)' original.svg small.png`
    may work.
- * An updated supported directories list in this README file.
-
+ * An updated supported directory list in this README file.
 
 ---
-Copyleft 2012-2023 Matthias Saou http://matthias.saou.eu/
+Copyleft 🄯 2012–2023 Matthias Saou https://matthias.saou.eu/
 
-All configuration files included are public domain. Do what you want with them.
-The invader logo was made by me, so unless the exact shape is covered by
-copyright somewhere, do what you want with it.
-The background is "Wallpaper grey" © 2008 payalnic (DeviantArt)
-The `ascii.pf2` font comes from GRUB, which is GPLv3+ licensed. For more
-details as well as the source code, see http://www.gnu.org/software/grub/
-
+All configuration files included are public domain. \
+The invader logo was made by me, so unless covered by \
+copyright somewhere, do what you want with it. \
+The background is "Wallpaper grey" © 2008 payalnic (DeviantArt) \
+The `ascii.pf2` font comes from GRUB, which is GPLv3+ licensed. \
+More details and source code on https://www.gnu.org/software/grub/
