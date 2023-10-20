@@ -75,6 +75,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`lubuntu`](https://lubuntu.me/)
 * [`manjaro`](https://manjaro.org/)
 * [`memtest`](https://memtest.org/) - _Binary Files (.bin/.efi)_
+* [`mxlinux`](https://mxlinux.org/)
 * [`netrunner`](https://www.netrunner.com/)
 * [`openbsd`](https://www.openbsd.org/)
 * [`opensuse`](https://www.opensuse.org/) - _Tumbleweed_
