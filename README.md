@@ -52,37 +52,37 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
 [//]: # (distro-list-start)
 
-* [`almalinux`](https://almalinux.org/) - _Live Media_ only
+* [`almalinux`](https://almalinux.org/) - _Live Media only_
 * [`antix`](https://antixlinux.com/)
 * [`arch`](https://archlinux.org/)
 * [`artix`](https://artixlinux.org/)
 * [`bodhi`](https://www.bodhilinux.com/)
 * [`calculate`](https://wiki.calculate-linux.org/desktop)
-* ~~[`centos`](https://www.centos.org/)~~ - _Live_ was discontinued
+* ~~[`centos`](https://www.centos.org/)~~ - _Live was discontinued_
 * [`clonezilla`](https://clonezilla.org/)
-* [`debian`](https://www.debian.org/CD/live/) - _live_ & `mini.iso`
+* [`debian`](https://www.debian.org/CD/live/) - _live & `mini.iso`_
 * [`elementary`](https://elementary.io/)
 * [`fedora`](https://fedoraproject.org/)
 * [`finnix`](https://www.finnix.org/)
 * [`gentoo`](https://www.gentoo.org/)
 * [`gparted`](https://gparted.org/)
 * [`grml`](https://grml.org/)
-* [`ipxe`](https://ipxe.org/)
+* [`ipxe`](https://ipxe.org/) - _.iso or .efi_
 * [`kali`](https://www.kali.org/)
 * [`kubuntu`](https://kubuntu.org/)
 * [`libreelec`](https://libreelec.tv/)
 * [`linuxmint`](https://linuxmint.com/)
 * [`lubuntu`](https://lubuntu.me/)
 * [`manjaro`](https://manjaro.org/)
-* [`memtest`](https://memtest.org/) - _Binary Files (.bin/.efi)_
+* [`memtest`](https://memtest.org/) - _Only .bin/.efi, not .iso_
 * [`mxlinux`](https://mxlinux.org/)
 * [`netrunner`](https://www.netrunner.com/)
 * [`openbsd`](https://www.openbsd.org/)
-* [`opensuse`](https://www.opensuse.org/) - _Tumbleweed_
+* [`opensuse`](https://www.opensuse.org/) - _Live from Alternative Downloads only_
 * [`peppermint`](https://peppermintos.com/)
 * [`popos`](https://pop.system76.com/)
 * [`porteus`](http://www.porteus.org/)
-* [`rhel`](https://www.redhat.com/rhel) - installation only
+* [`rhel`](https://www.redhat.com/rhel) - _Installation only_
 * [`rockylinux`](https://rockylinux.org/)
 * [`slitaz`](https://slitaz.org/)
 * [`supergrub2disk`](https://www.supergrubdisk.org/)
