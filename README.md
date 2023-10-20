@@ -90,7 +90,7 @@ The supported `boot/iso/` sub-directories (in A–Z order) are:
 
 [//]: # (distro-list-end)
 
-Unpopulated directories turns off the matching boot menu entry, \
+Boot-menu entries are not shown when their respective folders are empty, \
 so skip any distribution by not copying any files into it.
 
 Download the right ISO image(s) to the matching directory. \
