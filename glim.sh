@@ -9,6 +9,17 @@ if [[ `id -u` -eq 0 ]]; then
   exit 1
 fi
 
+# Use alternative if sudo is not found
+if [[ ! `which sudo &>/dev/null` ]]; then
+    if which doas &>/dev/null; then
+        alias sudo=doas
+    else
+        sudo () {
+            su -c "$*"
+        }
+    fi
+fi
+
 # Sanity check : GRUB2
 if which grub2-install &>/dev/null; then
   GRUB2_INSTALL="grub2-install"
