@@ -226,7 +226,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d "${USBMNTISO}/iso" ]] || ${ISOCMD_PREFIX} mkdir "${USBMNTISO}/iso"
+[[ -d "${USBMNTISO}/iso" ]] || ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso"
 echo "GLIM installed! Time to populate the '${USBMNTISO}/iso' sub-directories."
 
 # Now also pre-create all supported sub-directories since empty are ignored
@@ -236,7 +236,7 @@ args=(
 )
 
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
-  [[ -d "${USBMNTISO}/iso/${DIR}" ]] || ${ISOCMD_PREFIX} mkdir "${USBMNTISO}/iso/${DIR}"
+  [[ -d "${USBMNTISO}/iso/${DIR}" ]] || ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso/${DIR}"
 done
 
 echo "Finished!"
