@@ -147,7 +147,7 @@ if [[ $BIOS == true ]]; then
     echo "y"
     
     if [[ "$PartType" == "gpt" ]]; then
-		BiosBootPartWarning="(Grub needs a BIOS Boot Partition) "
+      BiosBootPartWarning="(Grub needs a BIOS Boot Partition) "
     fi
     read -n 1 -s -p "Also install for standard BIOS? $BiosBootPartWarning(y/N) " BIOS
     if [[ "$BIOS" == "y" || "$BIOS" == "Y" ]]; then
