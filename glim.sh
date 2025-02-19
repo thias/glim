@@ -30,7 +30,7 @@ if [[ ! -f ${GRUB2_CONF}/grub.cfg ]]; then
 fi
 
 #
-# Find GLIM device (use the first if multiple found, you've asked for trouble!)
+# Find GLIM device
 #
 
 # Sanity check : blkid command
@@ -38,11 +38,14 @@ if ! which blkid &>/dev/null; then
   echo "ERROR: blkid command not found."
   exit 1
 fi
-USBDEV1=`blkid -L GLIM | head -n 1`
+USBDEV1=`blkid -L GLIM`
 
 # Sanity check : we found one partition to use with matching label
 if [[ -z "$USBDEV1" ]]; then
   echo "ERROR: no partition found with label 'GLIM', please create one."
+  exit 1
+elif [[ "$(echo "$USBDEV1" | wc -l)" -gt 1 ]]; then
+  echo "ERROR: multiple partitions found with label 'GLIM', please disconnect/rename the unwanted ones."
   exit 1
 fi
 echo "Found partition with label 'GLIM' : ${USBDEV1}"
