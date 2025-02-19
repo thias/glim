@@ -87,19 +87,42 @@ else
   EFI=true
 fi
 
+# Check disk's partition table type
+echo    "Running fdisk -l ${USBDEV} (with sudo) to check if using GPT or MBR..."
+PartType="$(sudo fdisk -l ${USBDEV} | grep -iPo "Disklabel type:\s\K.*")"
+if [[ $? -ne 0 ]]; then
+  PartType="dos"	# Error, so assume the best case so don't give spurious warnings
+elif [[ "$PartType" == "gpt" ]]; then
+  echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub."
+else
+  echo "The ${USBDEV} block device uses GPT, which means Grub can install for both EFI & BIOS."
+fi
+
 #
 # EFI or regular?
 #
 
 if [[ $BIOS == true ]]; then
   # Set the target
-  read -n 1 -s -p "Install for EFI in addition to standard BIOS? (Y/n) " EFI
+  read -n 1 -s -p "Install for EFI? (Y/n) " EFI
   if [[ "$EFI" == "n" || "$EFI" == "N" ]]; then
     EFI=false
     echo "n"
   else
     EFI=true
     echo "y"
+    
+    if [[ "$PartType" == "gpt" ]]; then
+		BiosBootPartWarning="(Grub needs a BIOS Boot Partition) "
+    fi
+    read -n 1 -s -p "Also install for standard BIOS? $BiosBootPartWarning(y/N) " BIOS
+    if [[ "$BIOS" == "y" || "$BIOS" == "Y" ]]; then
+      BIOS=true
+      echo "y"
+    else
+      BIOS=false
+      echo "n"
+    fi
   fi
 fi
 
