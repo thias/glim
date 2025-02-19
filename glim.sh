@@ -61,11 +61,27 @@ if [[ ! -b "$USBDEV" ]]; then
   exit 1
 fi
 echo "Found block device where to install GRUB2 : ${USBDEV}"
-if [[ `ls -1 ${USBDEV}* | wc -l` -gt 2 ]]; then
-  echo "WARNING: There is more than one partition on ${USBDEV}"
+if [[ `ls -1 ${USBDEV}* | wc -l` -gt 3 ]]; then
+  echo "WARNING: There are more than two partitions on ${USBDEV}"
 fi
 
-# Sanity check : our partition is mounted
+# Look for second partition
+USBDEV2=`blkid -L GLIMISO`
+if [[ -z "$USBDEV2" ]]; then
+  echo "Did NOT find a second partition with label 'GLIMISO', so assuming ISO files will be stored on the main 'GLIM' partition."
+elif [[ "$(echo "$USBDEV2" | wc -l)" -gt 1 ]]; then
+  echo "ERROR: multiple partitions found with label 'GLIMISO', please disconnect/rename the unwanted ones."
+  exit 1
+else
+  if [[ "$USBDEV2" != "${USBDEV}2" ]]; then
+    USBDEV2=""
+    echo "WARNING: Ignored 'GLIMISO' partition ${USBDEV2} because it is not the second partition on the block device."
+  else
+    echo "Found partition with label 'GLIMISO' : ${USBDEV2}"
+  fi
+fi
+
+# Sanity check : our GLIM partition is mounted
 if ! grep -q -w ${USBDEV1} /proc/mounts; then
   echo "ERROR: ${USBDEV1} isn't mounted"
   exit 1
@@ -75,9 +91,26 @@ if [[ -z "$USBMNT" ]]; then
   echo "ERROR: Couldn't find mount point for ${USBDEV1}"
   exit 1
 fi
-echo "Found mount point for filesystem : ${USBMNT}"
+echo "Found 'GLIM' mount point for filesystem : ${USBMNT}"
 
-BIOS=true
+# Sanity check : our GLIMISO partition is mounted (if exists)
+if [[ -z "$USBDEV2" ]]; then
+  # (no second partition for ISOs)
+  USBMNTISO="${USBMNT}"
+  #USBMNTISO="${USBMNT}/boot"	# have ISOs where GLIM used to put them
+else
+  if ! grep -q -w ${USBDEV2} /proc/mounts; then
+    echo "ERROR: ${USBDEV2} isn't mounted"
+    exit 1
+  fi
+  USBMNTISO="$(grep -w ${USBDEV2} /proc/mounts | cut -d ' ' -f 2)"
+  if [[ -z "$USBMNTISO" ]]; then
+    echo "ERROR: Couldn't find mount point for ${USBDEV2}"
+    exit 1
+  fi
+  echo "Found 'GLIMISO' mount point for filesystem : ${USBMNTISO}"
+fi
+
 # Check BIOS support
 if [[ -d /usr/lib/grub/i386-pc ]]; then
   BIOS=true
@@ -93,7 +126,7 @@ PartType="$(sudo fdisk -l ${USBDEV} | grep -iPo "Disklabel type:\s\K.*")"
 if [[ $? -ne 0 ]]; then
   PartType="dos"	# Error, so assume the best case so don't give spurious warnings
 elif [[ "$PartType" == "gpt" ]]; then
-  echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub."
+  echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub.  GLIM needs this after the GLIMISO partition (if there is one)."
 else
   PartType="dos"	# Ensure script behaves sensibly if fdisk doesn't output "gpt" or "dos"
   echo "The ${USBDEV} block device uses GPT, which means Grub can install for both EFI & BIOS."
@@ -178,6 +211,11 @@ if [[ -w "${USBMNT}" ]]; then
 else
   CMD_PREFIX="sudo"
 fi
+if [[ -w "${USBMNTISO}" ]]; then
+  ISOCMD_PREFIX=""
+else
+  ISOCMD_PREFIX="sudo"
+fi
 
 # Copy GRUB2 configuration
 echo "Running rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ '${USBMNT}/boot/${GRUB2_DIR}' ..."
@@ -188,8 +226,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d "${USBMNT}/boot/iso" ]] || ${CMD_PREFIX} mkdir "${USBMNT}/boot/iso"
-echo "GLIM installed! Time to populate the '${USBMNT}/boot/iso' sub-directories."
+[[ -d "${USBMNTISO}/iso" ]] || ${ISOCMD_PREFIX} mkdir "${USBMNTISO}/iso"
+echo "GLIM installed! Time to populate the '${USBMNTISO}/iso' sub-directories."
 
 # Now also pre-create all supported sub-directories since empty are ignored
 args=(
@@ -198,7 +236,7 @@ args=(
 )
 
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
-  [[ -d "${USBMNT}/boot/iso/${DIR}" ]] || ${CMD_PREFIX} mkdir "${USBMNT}/boot/iso/${DIR}"
+  [[ -d "${USBMNTISO}/iso/${DIR}" ]] || ${ISOCMD_PREFIX} mkdir "${USBMNTISO}/iso/${DIR}"
 done
 
 echo "Finished!"
