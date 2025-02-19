@@ -7,9 +7,9 @@ https://github.com/thias/glim | http://glee.thias.es/GLIM
 Overview
 --------
 
-GLIM is a set of grub configuration files to turn a simple VFAT formatted USB
-memory stick with many GNU/Linux distribution ISO images into a neat device
-from which many different Live environments can be used.
+GLIM is a set of grub configuration files to turn a simple VFAT or FAT32 
+formatted USB memory stick containing many GNU/Linux distribution ISO images 
+into a neat device from which many different Live environments can be used.
 
 Advantages over extracting files or using special Live USB creation tools :
 
@@ -22,12 +22,12 @@ Disadvantages :
  * There is no persistence overlay for distributions which normally support it
  * Setting up isn't as easy as a simple cat from the ISO image to a block device
 
-My experience has been that the safest filesystem to use is FAT32
-(surprisingly!), though it will mean that ISO images greater than 4GB won't be
-supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4,
-NTFS and exFAT, but the boot of the distributions must also support it, which
-isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and exFAT
-(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet.
+As modern Linux ISOs often exceed the 4GB file size limit of FAT32, GLIM now 
+supports a second partition using other filesystems supported by GRUB2, such as 
+ext3/ext4, NTFS or exFAT - but the distribution must also support booting from 
+it, which isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and 
+exFAT (Ubuntu doesn't, Fedora does).  Ext4 is a safe bet for the second 
+partition.
 
 
 Screenshots
@@ -37,18 +37,64 @@ Screenshots
 ![Ubuntu Submenu](https://github.com/thias/glim/raw/master/screenshots/GLIM-3.0-shot2.png)
 
 
+Recent changes
+--------------
+
+* GLIM now easily supports ISO files >4GB through the use of a second partition,
+although you can still use a single partition if you want.
+
+* The ISO folder has been moved from `boot/iso/` to just `iso/`, so that it's 
+easier to find, and also is in the same location whether you use one or two 
+partitions.
+
+
+Requirements
+------------
+
+You need a USB memory stick (or external hard drive!) partitioned & formatted 
+one of the following ways:
+
+1. A single partition formatted as FAT32 with the filesystem label `GLIM`. 
+It doesn't matter if it uses MBR or GPT.
+
+or
+
+2. Two partitions.  The first partition must be formatted as FAT32 with the 
+filesystem label `GLIM`.  The second partition should be formatted as Ext4 with 
+the filesystem label `GLIMISO`.  It's best if the USB stick uses MBR, but if it 
+uses GPT (as GNOME's Disks utility does) then GRUB only supports installing for 
+EFI (not BIOS) - unless you add a third BIOS Boot partition.  GLIM needs the 
+BIOS Boot partition to come after the other two partitions.
+
+See the link below for details on how to create a BIOS Boot partition:
+
+https://wiki.archlinux.org/title/GRUB#GUID_Partition_Table_(GPT)_specific_instructions
+
+But basically create an unformatted 1MB partition at the end of the disk, then 
+change it's partition type to "BIOS Boot" (which has the 
+GUID `21686148-6449-6E6F-744E-656564454649`).  You can do this with GNOME's 
+Disks utility, without resorting to the terminal!
+
+
 Installation
 ------------
 
-Once you have your USB memory with a single partition formatted as FAT32 with
-the filesystem label 'GLIM', mount it, clone this git repository and just run
-(as a normal user) :
+Mount the GLIM partition (and the GLIMISO partition if present) on your USB 
+memory stick (or external hard drive).
+
+Then clone this git repository:
+
+    git clone git@github.com:thias/glim.git
+
+And just run the script (as a normal user) :
 
     ./glim.sh
 
-Once finished, you may change the filesystem label to anything you like.
+Once finished, you may change the filesystem label to anything you like. 
+The script will have created an `iso` folder, inside of which you will see an 
+empty folder for each supported Linux distro.
 
-The supported `boot/iso/` sub-directories (in alphabetical order) are :
+The supported `iso` sub-directories (in alphabetical order) are :
 
 [//]: # (distro-list-start)
 
@@ -97,13 +143,13 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 [//]: # (distro-list-end)
 
 Any unpopulated directory will have the matching boot menu entry automatically
-disabled, so to skip any distribution, just don't copy any files into it.
+hidden, so to skip any distribution, just don't copy any files into it.
 
 Download the right ISO image(s) to the matching directory. If you require
 boot parameter tweaks, edit the appropriate `boot/grub2/inc-*.cfg` file.
 
 Items order in the menu
-------------
+-----------------------
 
 Menu items for a distro are ordered by modification time of the iso files
 starting from the most recent ones. If some iso files have the same mtime, their
@@ -220,6 +266,8 @@ create a GitHub pull request which includes :
 
 ---
 Copyleft 2012-2023 Matthias Saou http://matthias.saou.eu/
+
+Copyleft 2025 Chris Handley https://github.com/cshandley-uk
 
 All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
