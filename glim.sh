@@ -95,6 +95,7 @@ if [[ $? -ne 0 ]]; then
 elif [[ "$PartType" == "gpt" ]]; then
   echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub."
 else
+  PartType="dos"	# Ensure script behaves sensibly if fdisk doesn't output "gpt" or "dos"
   echo "The ${USBDEV} block device uses GPT, which means Grub can install for both EFI & BIOS."
 fi
 
@@ -200,3 +201,4 @@ for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
   [[ -d "${USBMNT}/boot/iso/${DIR}" ]] || ${CMD_PREFIX} mkdir "${USBMNT}/boot/iso/${DIR}"
 done
 
+echo "Finished!"
