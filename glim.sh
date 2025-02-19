@@ -50,16 +50,19 @@ elif [[ "$(echo "$USBDEV1" | wc -l)" -gt 1 ]]; then
 fi
 echo "Found partition with label 'GLIM' : ${USBDEV1}"
 
-# Sanity check : our partition is the first and only one on the block device
+# Sanity check : our partition is the first one on the block device
+if [[ ! "${USBDEV1}" == *[a-z]1 ]]; then
+  echo "ERROR: $USBDEV1 is not the first partition on the block device."
+  exit 1
+fi
 USBDEV=${USBDEV1%1}
 if [[ ! -b "$USBDEV" ]]; then
   echo "ERROR: ${USBDEV} block device not found."
   exit 1
 fi
 echo "Found block device where to install GRUB2 : ${USBDEV}"
-if [[ `ls -1 ${USBDEV}* | wc -l` -ne 2 ]]; then
-  echo "ERROR: ${USBDEV1} isn't the only partition on ${USBDEV}"
-  exit 1
+if [[ `ls -1 ${USBDEV}* | wc -l` -gt 2 ]]; then
+  echo "WARNING: There is more than one partition on ${USBDEV}"
 fi
 
 # Sanity check : our partition is mounted
