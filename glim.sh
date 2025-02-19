@@ -70,7 +70,7 @@ if ! grep -q -w ${USBDEV1} /proc/mounts; then
   echo "ERROR: ${USBDEV1} isn't mounted"
   exit 1
 fi
-USBMNT=`grep -w ${USBDEV1} /proc/mounts | cut -d ' ' -f 2`
+USBMNT="$(grep -w ${USBDEV1} /proc/mounts | cut -d ' ' -f 2)"
 if [[ -z "$USBMNT" ]]; then
   echo "ERROR: Couldn't find mount point for ${USBDEV1}"
   exit 1
@@ -130,17 +130,17 @@ fi
 # Install GRUB2
 if [[ $BIOS == true ]]; then
   GRUB_TARGET="--target=i386-pc"
-  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-  sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
+  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory '${USBMNT}/boot' ${USBDEV} (with sudo) ..."
+  sudo          ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory "${USBMNT}/boot" ${USBDEV}
   if [[ $? -ne 0 ]]; then
       echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
       exit 1
   fi
 fi
 if [[ $EFI == true ]]; then
-  GRUB_TARGET="--target=x86_64-efi --efi-directory=${USBMNT} --removable"
-  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV} (with sudo) ..."
-  sudo ${GRUB2_INSTALL} ${GRUB_TARGET} --boot-directory=${USBMNT}/boot ${USBDEV}
+  GRUB_TARGET="--target=x86_64-efi --removable"
+  echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --efi-directory '${USBMNT}' --boot-directory '${USBMNT}/boot' ${USBDEV} (with sudo) ..."
+  sudo          ${GRUB2_INSTALL} ${GRUB_TARGET} --efi-directory "${USBMNT}" --boot-directory "${USBMNT}/boot" ${USBDEV}
   if [[ $? -ne 0 ]]; then
     echo "ERROR: ${GRUB2_INSTALL} returned with an error exit status."
     exit 1
@@ -155,16 +155,16 @@ else
 fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR} ..."
-${CMD_PREFIX} rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts ${GRUB2_CONF}/ ${USBMNT}/boot/${GRUB2_DIR}
+echo "Running rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ '${USBMNT}/boot/${GRUB2_DIR}' ..."
+${CMD_PREFIX} rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ "${USBMNT}/boot/${GRUB2_DIR}"
 if [[ $? -ne 0 ]]; then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d ${USBMNT}/boot/iso ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso
-echo "GLIM installed! Time to populate the boot/iso/ sub-directories."
+[[ -d "${USBMNT}/boot/iso" ]] || ${CMD_PREFIX} mkdir "${USBMNT}/boot/iso"
+echo "GLIM installed! Time to populate the '${USBMNT}/boot/iso' sub-directories."
 
 # Now also pre-create all supported sub-directories since empty are ignored
 args=(
@@ -173,6 +173,6 @@ args=(
 )
 
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
-  [[ -d ${USBMNT}/boot/iso/${DIR} ]] || ${CMD_PREFIX} mkdir ${USBMNT}/boot/iso/${DIR}
+  [[ -d "${USBMNT}/boot/iso/${DIR}" ]] || ${CMD_PREFIX} mkdir "${USBMNT}/boot/iso/${DIR}"
 done
 
