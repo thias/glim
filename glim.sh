@@ -94,9 +94,9 @@ fi
 if [[ $BIOS == true ]]; then
   # Set the target
   read -n 1 -s -p "Install for EFI in addition to standard BIOS? (Y/n) " EFI
-  if [[ "$EFI" == "n" ]]; then
-      EFI=false
-      echo "n"
+  if [[ "$EFI" == "n" || "$EFI" == "N" ]]; then
+    EFI=false
+    echo "n"
   else
     EFI=true
     echo "y"
@@ -119,12 +119,13 @@ fi
 #
 
 # Sanity check : human will read the info and confirm
-read -n 1 -s -p "Ready to install GLIM. Continue? (Y/n) " PROCEED
-if [[ "$PROCEED" == "n" ]]; then
+echo ""
+read -n 1 -s -p "Ready to install GLIM. Continue? (y/N) " PROCEED
+if [[ "$PROCEED" == "y" || "$PROCEED" == "Y" ]]; then
+  echo "y"
+else
   echo "n"
   exit 2
-else
-  echo "y"
 fi
 
 # Install GRUB2
