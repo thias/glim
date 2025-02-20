@@ -51,13 +51,16 @@ fi
 echo "Found partition with label 'GLIM' : ${USBDEV1}"
 
 # Sanity check : our partition is the first one on the block device
-if [[ ! "${USBDEV1}" == *[a-z]1 ]]; then
-  echo "ERROR: $USBDEV1 is not the first partition on the block device."
-  exit 1
-fi
-USBDEV=${USBDEV1%1}
+USBDEV="${USBDEV1/%[0-9]/}"		# This will fail if there are more than 9 partitions on the device, but seems unlikely & will work with NVMe partitions like /dev/nvme0n1p2
 if [[ ! -b "$USBDEV" ]]; then
   echo "ERROR: ${USBDEV} block device not found."
+  exit 1
+fi
+echo "Running fdisk -l ${USBDEV} (with sudo) ..."
+FDisk="$(sudo fdisk -l ${USBDEV})"
+mapfile -t PartOrder < <(echo "$FDisk" | grep -E ^${USBDEV} | sort -nk2,2 | awk '{ print $1 }')
+if [[ "${USBDEV1}" != "${PartOrder[0]}" ]]; then
+  echo "ERROR: $USBDEV1 is not the first partition on the block device."
   exit 1
 fi
 echo "Found block device where to install GRUB2 : ${USBDEV}"
@@ -73,7 +76,7 @@ elif [[ "$(echo "$USBDEV2" | wc -l)" -gt 1 ]]; then
   echo "ERROR: multiple partitions found with label 'GLIMISO', please disconnect/rename the unwanted ones."
   exit 1
 else
-  if [[ "$USBDEV2" != "${USBDEV}2" ]]; then
+  if [[ "$USBDEV2" != "${PartOrder[1]}" ]]; then
     USBDEV2=""
     echo "WARNING: Ignored 'GLIMISO' partition ${USBDEV2} because it is not the second partition on the block device."
   else
@@ -97,7 +100,6 @@ echo "Found 'GLIM' mount point for filesystem : ${USBMNT}"
 if [[ -z "$USBDEV2" ]]; then
   # (no second partition for ISOs)
   USBMNTISO="${USBMNT}"
-  #USBMNTISO="${USBMNT}/boot"	# have ISOs where GLIM used to put them
 else
   if ! grep -q -w ${USBDEV2} /proc/mounts; then
     echo "ERROR: ${USBDEV2} isn't mounted"
@@ -121,8 +123,7 @@ else
 fi
 
 # Check disk's partition table type
-echo    "Running fdisk -l ${USBDEV} (with sudo) to check if using GPT or MBR..."
-PartType="$(sudo fdisk -l ${USBDEV} | grep -iPo "Disklabel type:\s\K.*")"
+PartType="$(echo "$FDisk" | grep -iPo "Disklabel type:\s\K.*")"
 if [[ $? -ne 0 ]]; then
   PartType="dos"	# Error, so assume the best case so don't give spurious warnings
 elif [[ "$PartType" == "gpt" ]]; then
