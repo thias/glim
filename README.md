@@ -59,12 +59,13 @@ It doesn't matter if it uses MBR or GPT.
 
 or
 
-2. Two partitions.  The first partition must be formatted as FAT32 with the 
-filesystem label `GLIM`.  The second partition should be formatted as Ext4 with 
-the filesystem label `GLIMISO`.  It's best if the USB stick uses MBR, but if it 
-uses GPT (as GNOME's Disks utility does) then GRUB only supports installing for 
-EFI (not BIOS) - unless you add a third BIOS Boot partition.  GLIM needs the 
-BIOS Boot partition to come after the other two partitions.
+2. Two partitions.  The small first partition must be formatted as FAT32 with 
+the filesystem label `GLIM`, I suggest 100MB in size.  The second partition 
+should be formatted as Ext4 with the filesystem label `GLIMISO`.  It's best if 
+the USB stick uses MBR, but if it uses GPT (as GNOME's Disks utility does) then 
+GRUB only supports installing for EFI (not BIOS) - unless you add a third BIOS 
+Boot partition.  GLIM needs the BIOS Boot partition to come after the other two 
+partitions.
 
 See the link below for details on how to create a BIOS Boot partition:
 
