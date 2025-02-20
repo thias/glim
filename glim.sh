@@ -130,7 +130,7 @@ elif [[ "$PartType" == "gpt" ]]; then
   echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub.  GLIM needs this after the GLIMISO partition (if there is one)."
 else
   PartType="dos"	# Ensure script behaves sensibly if fdisk doesn't output "gpt" or "dos"
-  echo "The ${USBDEV} block device uses GPT, which means Grub can install for both EFI & BIOS."
+  echo "The ${USBDEV} block device uses MBR, which means Grub can install for both EFI & BIOS."
 fi
 
 #
