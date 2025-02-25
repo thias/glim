@@ -83,11 +83,8 @@ Installation
 Mount the GLIM partition (and the GLIMISO partition if present) on your USB 
 memory stick (or external hard drive).
 
-Then clone this git repository:
-
-    git clone git@github.com:thias/glim.git
-
-And just run the script (as a normal user) :
+Then clone the git repository (or use Code > Download ZIP before unzipping it), 
+and just run the script (as a normal user) :
 
     ./glim.sh
 
