@@ -209,25 +209,32 @@ fi
 # Check USB mount dir write permission, to use sudo if missing
 if [[ -w "${USBMNT}" ]]; then
   CMD_PREFIX=""
+  CMD_CHOWN=""
 else
   CMD_PREFIX="sudo"
+  CMD_CHOWN="--copy-as=$USER"
 fi
 if [[ -w "${USBMNTISO}" ]]; then
   ISOCMD_PREFIX=""
+  ISOCMD_CHOWN=""
 else
   ISOCMD_PREFIX="sudo"
+  ISOCMD_CHOWN="sudo chown $USER:$USER"
 fi
 
 # Copy GRUB2 configuration
-echo "Running rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ '${USBMNT}/boot/${GRUB2_DIR}' ..."
-${CMD_PREFIX} rsync -rt --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ "${USBMNT}/boot/${GRUB2_DIR}"
+echo "Running rsync -rt $CMD_CHOWN --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ '${USBMNT}/boot/${GRUB2_DIR}' ..."
+${CMD_PREFIX} rsync -rt $CMD_CHOWN --delete --exclude=i386-pc --exclude=x86_64-efi --exclude=fonts -- ${GRUB2_CONF}/ "${USBMNT}/boot/${GRUB2_DIR}"
 if [[ $? -ne 0 ]]; then
   echo "ERROR: the rsync copy returned with an error exit status."
   exit 1
 fi
 
 # Be nice and pre-create the directory, and mention it
-[[ -d "${USBMNTISO}/iso" ]] || ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso"
+if [[ ! -d "${USBMNTISO}/iso" ]]; then
+	${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso"
+    if [ -n "$ISOCMD_CHOWN" ]; then $ISOCMD_CHOWN "${USBMNTISO}/iso"; fi
+fi
 echo "GLIM installed! Time to populate the '${USBMNTISO}/iso' sub-directories."
 
 # Now also pre-create all supported sub-directories since empty are ignored
@@ -237,7 +244,10 @@ args=(
 )
 
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
-  [[ -d "${USBMNTISO}/iso/${DIR}" ]] || ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso/${DIR}"
+  if [[ ! -d "${USBMNTISO}/iso/${DIR}" ]]; then
+    ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso/${DIR}"
+    if [ -n "$ISOCMD_CHOWN" ]; then $ISOCMD_CHOWN "${USBMNTISO}/iso/${DIR}"; fi
+  fi
 done
 
 echo "Finished!"
