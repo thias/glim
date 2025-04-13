@@ -51,7 +51,7 @@ fi
 echo "Found partition with label 'GLIM' : ${USBDEV1}"
 
 # Sanity check : our partition is the first one on the block device
-USBDEV="${USBDEV1/%[0-9]/}"		# This will fail if there are more than 9 partitions on the device, but seems unlikely & will work with NVMe partitions like /dev/nvme0n1p2
+USBDEV="${USBDEV1/%[0-9]/}"		# This will fail if there are more than 10 partitions on the device, but seems unlikely & will work with NVMe partitions like /dev/nvme0n1p2
 if [[ ! -b "$USBDEV" ]]; then
   echo "ERROR: ${USBDEV} block device not found."
   exit 1
@@ -197,7 +197,7 @@ if [[ $BIOS == true ]]; then
   fi
 fi
 if [[ $EFI == true ]]; then
-  GRUB_TARGET="--target=x86_64-efi --removable"
+  GRUB_TARGET="--target=x86_64-efi --removable --no-nvram"
   echo "Running ${GRUB2_INSTALL} ${GRUB_TARGET} --efi-directory '${USBMNT}' --boot-directory '${USBMNT}/boot' ${USBDEV} (with sudo) ..."
   sudo          ${GRUB2_INSTALL} ${GRUB_TARGET} --efi-directory "${USBMNT}" --boot-directory "${USBMNT}/boot" ${USBDEV}
   if [[ $? -ne 0 ]]; then
@@ -232,8 +232,8 @@ fi
 
 # Be nice and pre-create the directory, and mention it
 if [[ ! -d "${USBMNTISO}/iso" ]]; then
-	${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso"
-    if [ -n "$ISOCMD_CHOWN" ]; then $ISOCMD_CHOWN "${USBMNTISO}/iso"; fi
+  ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso"
+  if [ -n "$ISOCMD_CHOWN" ]; then $ISOCMD_CHOWN "${USBMNTISO}/iso"; fi
 fi
 echo "GLIM installed! Time to populate the '${USBMNTISO}/iso' sub-directories."
 
@@ -242,12 +242,17 @@ args=(
   -E -n
   '/\(distro-list-start\)/,/\(distro-list-end\)/{s,^\* \[`([a-z0-9]+)`\].*$,\1,p}'
 )
-
 for DIR in $(sed "${args[@]}" "$(dirname "$0")"/README.md); do
   if [[ ! -d "${USBMNTISO}/iso/${DIR}" ]]; then
     ${ISOCMD_PREFIX} mkdir -p "${USBMNTISO}/iso/${DIR}"
     if [ -n "$ISOCMD_CHOWN" ]; then $ISOCMD_CHOWN "${USBMNTISO}/iso/${DIR}"; fi
   fi
 done
+
+echo "Copying readme to GLIM partitions ..."
+${CMD_PREFIX} cp -v "$(dirname $0)/README.md" "${USBMNT}/glim-readme.txt"
+if [[ "$USBMNTISO" != "$USBMNT" ]]; then
+  ${ISOCMD_PREFIX} cp -v "$(dirname $0)/README.md" "${USBMNTISO}/glim-readme.txt"
+fi
 
 echo "Finished!"
