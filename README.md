@@ -85,9 +85,9 @@ memory stick (or external hard drive).
 
 Then clone the git repository (or use Code > Download ZIP before unzipping it), 
 and just run the script (as a normal user) :
-
-    ./glim.sh
-
+```
+./glim.sh
+```
 Once finished, you may change the filesystem label to anything you like. 
 The script will have created an `iso` folder, inside of which you will see an 
 empty folder for each supported Linux distro.
@@ -261,11 +261,12 @@ create a GitHub pull request which includes :
    may work.
  * An updated supported directories list in this README file.
 
+Credits
+-------
 
----
-Copyleft 2012-2023 Matthias Saou http://matthias.saou.eu/
-
-Copyleft 2025 Chris Handley https://github.com/cshandley-uk
+* Copyleft 2012-2023 Matthias Saou http://matthias.saou.eu/
+* Copyleft 2025 Chris Handley https://github.com/cshandley-uk
+* Copyleft 2025 Eugene Sanivsky (eugenesan) https://github.com/eugenesan
 
 All configuration files included are public domain. Do what you want with them.
 The invader logo was made by me, so unless the exact shape is covered by
