@@ -1,7 +1,8 @@
 GRUB2 Live ISO Multiboot
 ========================
 
-https://github.com/thias/glim | http://glee.thias.es/GLIM
+This version: https://github.com/cshandley-uk/bash_glim
+Forked from:  https://github.com/thias/glim | http://glee.thias.es/GLIM
 
 
 Overview
@@ -47,6 +48,8 @@ although you can still use a single partition if you want.
 easier to find, and also is in the same location whether you use one or two 
 partitions.
 
+* Added the `format_empty_disk.sh` script.
+
 
 Requirements
 ------------
@@ -75,6 +78,18 @@ But basically create an unformatted 1MB partition at the end of the disk, then
 change it's partition type to "BIOS Boot" (which has the 
 GUID `21686148-6449-6E6F-744E-656564454649`).  You can do this with GNOME's 
 Disks utility, without resorting to the terminal!
+
+Alternatively you can try using `format_empty_disk.sh`, my experimental new 
+script which will ask you a few questions before before setting-up an empty 
+disk with GLIM's recommended two partition set-up (plus a BIOS Boot partition), 
+ready to use with `glim.sh` itself.  I've tried to make it safe, so for example 
+it shouldn't delete any partitions, only create new ones... And in the event of 
+any errors, the script should stop rather than risk doing anything wrong.  
+HOWEVER, it is still a very new script, which likely contains bugs, especially 
+on systems different to my own, so please let me know about any problems you 
+experience.  You use this script entirely at your own risk.  If it formats your 
+entire computer, then that is your problem.  So please make sure you have a 
+recent backup before using it.
 
 
 Installation
