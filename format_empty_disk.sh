@@ -77,7 +77,7 @@ trap "echo 'ERROR: Script did not finished partitioning.'" EXIT
 set -x
 #sudo sgdisk --zap-all $Disk	# erase any existing partition information from HD
 sudo sgdisk --mbrtogpt $Disk	# use GPT not MBR
-sudo sgdisk --clear $Disk		# wipe any previous partition
+#sudo sgdisk --clear $Disk		# wipe any previous partition
 #sudo partprobe $Disk			# request the OS re-reads the partition table
 sudo blockdev --rereadpt $Disk	# request the OS re-reads the partition table', and errors if a partition is already mounted on the disk
 

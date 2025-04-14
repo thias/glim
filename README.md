@@ -84,7 +84,7 @@ script which will ask you a few questions before before setting-up an empty
 disk with GLIM's recommended two partition set-up (plus a BIOS Boot partition), 
 ready to use with `glim.sh` itself.  I've tried to make it safe, so for example 
 it shouldn't delete any partitions, only create new ones... And in the event of 
-any errors, the script should stop rather than risk doing anything wrong.  
+any errors, the script should stop rather than risk doing anything wrong. 
 HOWEVER, it is still a very new script, which likely contains bugs, especially 
 on systems different to my own, so please let me know about any problems you 
 experience.  You use this script entirely at your own risk.  If it formats your 
