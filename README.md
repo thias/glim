@@ -82,6 +82,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`peppermint`](https://peppermintos.com/)
 * [`popos`](https://pop.system76.com/)
 * [`porteus`](http://www.porteus.org/)
+* [`rescuezilla`](https://rescuezilla.com/)
 * [`rhel`](https://www.redhat.com/rhel) - _Installation only_
 * [`rockylinux`](https://rockylinux.org/)
 * [`slitaz`](https://slitaz.org/)
@@ -124,7 +125,7 @@ releases of some distro:
 Sample ordered menu:
 
 |                                    | iso mtime               |
-|------------------------------------|-------------------------|
+| ---------------------------------- | ----------------------- |
 | Debian Live 12.0.0 amd64 standard  | 10 June 2023            |
 | Debian Live 11.7.0 amd64 gnome     | 14 August 2021 + 7 days |
 | Debian Live 11.7.0 amd64 kde       | 14 August 2021 + 7 days |
