@@ -64,9 +64,6 @@ if [[ "${USBDEV1}" != "${PartOrder[0]}" ]]; then
   exit 1
 fi
 echo "Found block device where to install GRUB2 : ${USBDEV}"
-if [[ `ls -1 ${USBDEV}* | wc -l` -gt 3 ]]; then
-  echo "WARNING: There are more than two partitions on ${USBDEV}"
-fi
 
 # Look for second partition
 USBDEV2=`blkid -L GLIMISO`
@@ -82,6 +79,19 @@ else
   else
     echo "Found partition with label 'GLIMISO' : ${USBDEV2}"
   fi
+fi
+
+# Look for BIOS Boot partition
+BiosBoot="$(echo "$FDisk" | grep -E ^${USBDEV} | awk '{ print $1 }' | xargs -I {} lsblk -ndo PARTTYPE {} | grep "^21686148-6449-6e6f-744e-656564454649$" | cat)"
+
+if [ -n "$BiosBoot" ]; then
+  echo "Found BIOS Boot partition."
+  NumOfPartitionsExpected=3
+else
+  NumOfPartitionsExpected=2
+fi
+if [[ `ls -1 ${USBDEV}?* | wc -l` -gt $NumOfPartitionsExpected ]]; then
+  echo "WARNING: There are more than $NumOfPartitionsExpected partitions on ${USBDEV}"
 fi
 
 # Sanity check : our GLIM partition is mounted
@@ -127,7 +137,11 @@ PartType="$(echo "$FDisk" | grep -iPo "Disklabel type:\s\K.*")"
 if [[ $? -ne 0 ]]; then
   PartType="dos"	# Error, so assume the best case so don't give spurious warnings
 elif [[ "$PartType" == "gpt" ]]; then
-  echo "The ${USBDEV} block device uses GPT, which means you can only install for EFI (not BIOS) unless it has a 1MB BIOS Boot partition for Grub.  GLIM needs this after the GLIMISO partition (if there is one)."
+  if [[ -z "$BiosBoot" ]]; then
+	echo "The ${USBDEV} block device uses GPT, but appears to be missing the 1MB BIOS Boot partition, so Grub can only install EFI (not BIOS).  Grub needs a 1MB BIOS Boot partition, and GLIM needs this after the GLIMISO partition (if there is one)."
+  else
+	echo "The ${USBDEV} block device uses GPT, and Grub can install for both EFI & BIOS, since it has the required BIOS Boot partition."
+  fi
 else
   PartType="dos"	# Ensure script behaves sensibly if fdisk doesn't output "gpt" or "dos"
   echo "The ${USBDEV} block device uses MBR, which means Grub can install for both EFI & BIOS."
@@ -147,8 +161,8 @@ if [[ $BIOS == true ]]; then
     EFI=true
     echo "y"
     
-    if [[ "$PartType" == "gpt" ]]; then
-      BiosBootPartWarning="(Grub needs a BIOS Boot Partition) "
+    if [[ "$PartType" == "gpt" && -z "$BiosBoot" ]]; then
+      BiosBootPartWarning="(Grub needs a BIOS Boot Partition - which was NOT found) "
     fi
     read -n 1 -s -p "Also install for standard BIOS? $BiosBootPartWarning(y/N) " BIOS
     if [[ "$BIOS" == "y" || "$BIOS" == "Y" ]]; then
