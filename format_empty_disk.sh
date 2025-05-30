@@ -3,19 +3,47 @@ set -e		# exit on error
 #set -v		# print script lines to be executed
 #set -x		# print commands being executed
 
-for Cmd in fdisk lsblk sgdisk blockdev partprobe; do
+GlimSize=100M
+BiosBootSize=1M
+
+# Check if necessary commands are installed
+NeededCmds="fdisk sgdisk partprobe awk mkfs.fat lsblk blockdev"
+for Cmd in $NeededCmds; do
 	if [ -z "$(which $Cmd | cat)" ]; then
+		# (command not installed)
+		if [ -n "$(which apt | cat)" ]; then
+			# (system uses 'apt') so offer to install missing command
+			echo "This script needs the '$Cmd' command, so trying to install it:"
+			if   [ "$Cmd" == "sgdisk" ]; then
+				sudo apt install gdisk
+			elif [ "$Cmd" == "partprobe" ]; then
+				sudo apt install parted
+			elif [ "$Cmd" == "awk" ]; then
+				sudo apt install gawk
+			elif [ "$Cmd" == "mkfs.fat" ]; then
+				sudo apt install dosfstools
+			elif [ "$Cmd" == "lsblk" ]; then
+				sudo apt install util-linux		# this should always be installed
+			elif [ "$Cmd" == "blockdev" ]; then
+				sudo apt install util-linux		# ditto
+			else
+				sudo apt install $Cmd	# works for "fdisk"
+			fi
+		fi
+	fi
+done
+for Cmd in $NeededCmds; do
+	if [ -z "$(which $Cmd | cat)" ]; then
+		# (command not installed)
 		echo "ERROR: This script needs the '$Cmd' command, please install it."
 		exit 1
 	fi
 done
 
-GlimSize=100M
-BiosBootSize=1M
-
+# Show warning to user
 echo "Please read the 'README.md' documentation before using this script."
 echo ""
-echo "WARNING: This script will format a chosen empty hard disk with GLIM's recommended set-up.  Although I've tried to be careful, a bug could potentially wipe your whole computer.  So make sure you have a recent backed-up before executing this script."
+echo "WARNING: This script will format a chosen empty hard disk with GLIM's recommended set-up.  Although I've tried to be careful, a bug could potentially wipe your whole computer.  So make sure you have a recent backup before executing this script."
 echo ""
 echo 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.'
 echo ""
@@ -44,13 +72,13 @@ if [ -z "$(echo "$Devices" | grep "^${Disk}$")" ]; then
 fi
 
 # Check not overwriting the boot disk (but this is not foolproof)
-if [[ "$(awk '$1 ~ /^\/dev\// && $2 == "/boot" { print $1 }' /proc/self/mounts)" == ${Disk}* ]]; then
+if [[ "$(awk '$2 == "/boot" && $1 ~ /^\/dev\// { print $1 }' /proc/self/mounts)" == ${Disk}* ]]; then
 	echo "ERROR: $Disk is the boot disk."
 	exit 1
 fi
 
 ## Check that disk has no mounted partitions
-#if [ -n "$(mount | grep ^$Disk | cat)" ]; then
+#if [ -n "$(grep ^$Disk /proc/self/mounts | cat)" ]; then
 #	echo "ERROR: $Disk is has mounted partitions."
 #	exit 1
 #fi
