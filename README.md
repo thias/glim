@@ -2,7 +2,8 @@ GRUB2 Live ISO Multiboot
 ========================
 
 This version: https://github.com/cshandley-uk/bash_glim
-Forked from:  https://github.com/thias/glim | http://glee.thias.es/GLIM
+
+Forked from:  https://github.com/thias/glim | https://glee.thias.es/GLIM
 
 
 Overview
@@ -29,7 +30,6 @@ ext3/ext4, NTFS or exFAT - but the distribution must also support booting from
 it, which isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and 
 exFAT (Ubuntu doesn't, Fedora does).  Ext4 is a safe bet for the second 
 partition.
-
 
 Screenshots
 -----------
@@ -58,19 +58,19 @@ You need a USB memory stick (or external hard drive!) partitioned & formatted
 one of the following ways:
 
 1. A single partition formatted as FAT32 with the filesystem label `GLIM`. 
-It doesn't matter if it uses MBR or GPT.
+You can use MBR or GPT as needed (but legacy BIOS may need MBR).
 
 or
 
 2. Two partitions.  The small first partition must be formatted as FAT32 with 
 the filesystem label `GLIM`, I suggest 100MB in size.  The second partition 
-should be formatted as Ext4 with the filesystem label `GLIMISO`.  It's best if 
-the USB stick uses MBR, but if it uses GPT (as GNOME's Disks utility does) then 
-GRUB only supports installing for EFI (not BIOS) - unless you add a third BIOS 
-Boot partition.  GLIM needs the BIOS Boot partition to come after the other two 
-partitions.
+should be formatted as Ext4 with the filesystem label `GLIMISO`.  
 
-See the link below for details on how to create a BIOS Boot partition:
+It's best if the USB stick uses MBR, but if it uses GPT (as GNOME's Disks 
+utility does) then GRUB only supports installing for EFI (not BIOS) - unless you 
+add a third BIOS Boot partition.  GLIM needs the BIOS Boot partition to come 
+after the other two partitions.  See the link below for details on how to create 
+a BIOS Boot partition:
 
 https://wiki.archlinux.org/title/GRUB#GUID_Partition_Table_(GPT)_specific_instructions
 
@@ -79,17 +79,17 @@ change it's partition type to "BIOS Boot" (which has the
 GUID `21686148-6449-6E6F-744E-656564454649`).  You can do this with GNOME's 
 Disks utility, without resorting to the terminal!
 
-Alternatively you can try using `format_empty_disk.sh`, my experimental new 
-script which will ask you a few questions before before setting-up an empty 
-disk with GLIM's recommended two partition set-up (plus a BIOS Boot partition), 
-ready to use with `glim.sh` itself.  I've tried to make it safe, so for example 
-it shouldn't delete any partitions, only create new ones... And in the event of 
-any errors, the script should stop rather than risk doing anything wrong. 
-HOWEVER, it is still a very new script, which likely contains bugs, especially 
-on systems different to my own, so please let me know about any problems you 
-experience.  You use this script entirely at your own risk.  If it formats your 
-entire computer, then that is your problem.  So please make sure you have a 
-recent backup before using it.
+Or if you find partitioning difficult, then you can try using my experimental 
+new script `format_empty_disk.sh`, which will ask you a few questions before 
+before setting-up an empty disk with GLIM's recommended two partition GPT set-up 
+(plus a BIOS Boot partition), ready to use with `glim.sh` itself.  I've tried to 
+make it safe, so for example it shouldn't delete any partitions, only create new 
+ones... And in the event of any errors, the script should stop rather than risk 
+doing anything wrong. HOWEVER, it is still a very new script, which likely 
+contains bugs, especially on systems different to my own, so please let me know 
+about any problems you experience.  You use this script entirely at your own 
+risk.  If it formats your entire computer, then that is your problem.  So please 
+make sure you have a recent backup before using it.
 
 
 Installation
