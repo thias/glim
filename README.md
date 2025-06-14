@@ -27,7 +27,9 @@ My experience has been that the safest filesystem to use is FAT32
 supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4,
 NTFS and exFAT, but the boot of the distributions must also support it, which
 isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and exFAT
-(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet.
+(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet; make sure your device
+is partitioned with MBR (not GPT) for legacy BIOS and EFI hybrid support for peak
+compatibility.
 
 
 Screenshots
