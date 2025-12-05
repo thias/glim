@@ -41,12 +41,13 @@ Screenshots
 
 Installation
 ------------
+1. Use a tool like `fdisk` to format your USB drive to have a single FAT32 partition. Example: `sudo fdisk /dev/sdX1`
+2. Apply the filesystem label 'GLIM' to the partition. Example: `sudo mkfs.vfat -F 32 -n GLIM /dev/sdX1`
+3. Mount the drive. Example: `sudo mount -t vfat /dev/sdX1 /mnt/usb`
+4. Clone this git repository (home directory is a recommended location)
+5. Run the following command as a normal user:
 
-Once you have your USB memory with a single partition formatted as FAT32 with
-the filesystem label 'GLIM', mount it, clone this git repository and just run
-(as a normal user) :
-
-    ./glim.sh
+    `./glim.sh`
 
 Once finished, you may change the filesystem label to anything you like.
 
