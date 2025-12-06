@@ -43,25 +43,25 @@ Installation
 ------------
 Note: `sdX` is a stand-in name for the USB drive you want to format
 1. Use `lsblk` to check the name of the USB drive you want to format (it should be something like `sda` or `sdb`)
-3. Use a tool like `fdisk` to format your USB drive to have a single FAT32 partition.
+2. Use a tool like `fdisk` to format your USB drive to have a single FAT32 partition.
 
     `sudo fdisk /dev/sdX`
 
-4. Apply the filesystem label 'GLIM' to the partition.
+3. Apply the filesystem label 'GLIM' to the partition.
 
     `sudo mkfs.vfat -F 32 -n GLIM /dev/sdX1`
 
-5. Mount the drive (if a directory hasn't been made in `/mnt/`, make it).
+4. Mount the drive (if a directory hasn't been made in `/mnt/`, make it).
 
     `sudo mount -t vfat /dev/sdX1 /mnt/usb`
 
-6. Clone this git repository
+5. Clone this git repository
    
-7. Run the following command as a normal user:
+6. Run the following command as a normal user:
 
     `./glim.sh`
 
-Once finished, you may change the filesystem label to anything you like.
+7. Once finished, you may change the filesystem label to anything you like.
 
 The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
