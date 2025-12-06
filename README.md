@@ -41,11 +41,23 @@ Screenshots
 
 Installation
 ------------
-1. Use a tool like `fdisk` to format your USB drive to have a single FAT32 partition. Example: `sudo fdisk /dev/sdX1`
-2. Apply the filesystem label 'GLIM' to the partition. Example: `sudo mkfs.vfat -F 32 -n GLIM /dev/sdX1`
-3. Mount the drive. Example: `sudo mount -t vfat /dev/sdX1 /mnt/usb`
-4. Clone this git repository (home directory is a recommended location)
-5. Run the following command as a normal user:
+Note: `sdX` is a stand-in name for the USB drive you want to format
+1. Use `lsblk` to check the name of the USB drive you want to format (it should be something like `sda` or `sdb`)
+3. Use a tool like `fdisk` to format your USB drive to have a single FAT32 partition.
+
+    `sudo fdisk /dev/sdX`
+
+4. Apply the filesystem label 'GLIM' to the partition.
+
+    `sudo mkfs.vfat -F 32 -n GLIM /dev/sdX1`
+
+5. Mount the drive (if a directory hasn't been made in `/mnt/`, make it).
+
+    `sudo mount -t vfat /dev/sdX1 /mnt/usb`
+
+6. Clone this git repository
+   
+7. Run the following command as a normal user:
 
     `./glim.sh`
 
