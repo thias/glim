@@ -59,6 +59,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`arch`](https://archlinux.org/)
 * [`artix`](https://artixlinux.org/)
 * [`bodhi`](https://www.bodhilinux.com/)
+* [`cachyos`](https://cachyos.org/)
 * [`calculate`](https://wiki.calculate-linux.org/desktop)
 * ~~[`centos`](https://www.centos.org/)~~ - _Live was discontinued_
 * [`clonezilla`](https://clonezilla.org/)
