@@ -22,14 +22,17 @@ Disadvantages :
  * There is no persistence overlay for distributions which normally support it
  * Setting up isn't as easy as a simple cat from the ISO image to a block device
 
-My experience has been that the safest filesystem to use is FAT32
-(surprisingly!), though it will mean that ISO images greater than 4GB won't be
-supported. Other filesystems supported by GRUB2 also work, such as ext3/ext4,
-NTFS and exFAT, but the boot of the distributions must also support it, which
-isn't the case for many with NTFS (Ubuntu does, Fedora doesn't) and exFAT
-(Ubuntu doesn't, Fedora does). So FAT32 stays the safe bet; make sure your device
-is partitioned with MBR (not GPT) for legacy BIOS and EFI hybrid support for peak
-compatibility.
+Two partition layouts are supported:
+
+**Simple (default):** One FAT32 partition labelled `GLIM` holds both the GRUB
+configuration and your ISO images. Readable on Windows and macOS, works across
+BIOS and EFI systems. ISO images greater than 4 GB are not supported due to the
+FAT32 file-size limit.
+
+**GPT (advanced, for ISOs > 4 GB):** A dedicated EFI System Partition and an
+ext4 GLIM partition remove the 4 GB limit. An optional fourth partition
+(`GLIMDATA`, exFAT by default) provides cross-platform storage accessible
+from live environments. See [GPT Setup](#gpt-setup-for-isos--4-gb) below.
 
 
 Screenshots
@@ -49,6 +52,79 @@ the filesystem label 'GLIM', mount it, clone this git repository and just run
     ./glim.sh
 
 Once finished, you may change the filesystem label to anything you like.
+
+**Automated simple setup** (creates a single FAT32 partition):
+
+    ./glim-partition.sh /dev/sdX
+
+For ISOs larger than 4 GB, see [GPT Setup](#gpt-setup-for-isos--4-gb) first,
+then run `./glim.sh` on the mounted GLIM partition as usual.
+
+
+GPT Setup (for ISOs > 4 GB)
+----------------------------
+
+This layout supports ISO files of any size and optionally provides a data
+partition accessible from live environments.
+
+**Partition layout:**
+
+| Partition | Size    | Type             | Label      | Purpose                        |
+|-----------|---------|------------------|------------|--------------------------------|
+| P1        | 1 MiB   | BIOS Boot (ef02) | (none)     | GRUB2 BIOS core image          |
+| P2        | 256 MiB | EFI System (ef00)| (none)     | EFI bootloader (FAT32)         |
+| P3        | [rest]  | Linux (8300)     | `GLIM`     | GRUB config + ISO images (ext4)|
+| P4        | [opt]   | Linux (8300)     | `GLIMDATA` | User storage (exFAT by default, optional) |
+
+GLIMDATA defaults to exFAT: readable on Windows, macOS, and Linux with no
+file size limit. Use `--data-fs ext4` for a Linux-only journaled filesystem.
+
+**Automated setup** (destructive, erases the entire device):
+
+    ./glim-partition.sh /dev/sdX --gpt                               # GLIM only
+    ./glim-partition.sh /dev/sdX --gpt --data-size 32G              # with 32 GB data (exFAT)
+    ./glim-partition.sh /dev/sdX --gpt --data-size 32G --data-fs ext4  # ext4 data partition
+
+Required packages: `gdisk` (provides `sgdisk`), `dosfstools` (`mkfs.vfat`),
+`e2fsprogs` (`mkfs.ext4`), `exfatprogs` (`mkfs.exfat`, for exFAT GLIMDATA).
+
+**Manual setup** (using `sgdisk` directly):
+
+    # Partition
+    sudo sgdisk -Z \
+      -n "1:2048:+1M"   -t "1:ef02" -c "1:BIOS Boot" \
+      -n "2:0:+256M"    -t "2:ef00" -c "2:ESP" \
+      -n "3:0:-32G"     -t "3:8300" -c "3:GLIM" \
+      -n "4:0:0"        -t "4:8300" -c "4:GLIMDATA" \
+      /dev/sdX
+
+    # Omit the last two lines and use -n "3:0:0" if no data partition.
+
+    # Format
+    sudo mkfs.vfat -F 32 /dev/sdX2
+    sudo mkfs.ext4 -L GLIM /dev/sdX3
+    sudo mkfs.exfat -n GLIMDATA /dev/sdX4   # optional, exFAT (cross-platform)
+    # or: sudo mkfs.ext4 -L GLIMDATA /dev/sdX4   # Linux-only
+
+    # Mount and install GLIM
+    sudo mount /dev/sdX3 /mnt
+    ./glim.sh
+    sudo umount /mnt
+
+**Accessing the data partition from a live environment:**
+
+The `GLIMDATA` partition will appear as a standard block device. Most live
+environments automount labelled partitions, or you can mount it manually:
+
+    sudo mount /dev/disk/by-label/GLIMDATA /mnt/data
+
+**Secure Boot note:**
+
+GLIM itself does not require Secure Boot to be disabled. However, some ISO
+images (Gentoo, Arch, Artix, and others) include shim bootloaders that are not
+signed by a Microsoft-trusted CA. Booting these ISOs on a system with Secure
+Boot enabled will produce a `bad shim signature` error. Disable Secure Boot in
+your BIOS/UEFI firmware settings to boot unsigned ISOs.
 
 The supported `boot/iso/` sub-directories (in alphabetical order) are :
 
