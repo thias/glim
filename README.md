@@ -71,6 +71,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`grml`](https://grml.org/)
 * [`ipxe`](https://ipxe.org/) - _.iso or .efi_
 * [`kali`](https://www.kali.org/)
+* [`kdeneon`](https://neon.kde.org/)
 * [`kubuntu`](https://kubuntu.org/)
 * [`libreelec`](https://libreelec.tv/)
 * [`linuxmint`](https://linuxmint.com/)
