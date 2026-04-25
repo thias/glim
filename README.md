@@ -81,8 +81,8 @@ file size limit. Use `--data-fs ext4` for a Linux-only journaled filesystem.
 
 **Automated setup** (destructive, erases the entire device):
 
-    ./glim-partition.sh /dev/sdX --gpt                               # GLIM only
-    ./glim-partition.sh /dev/sdX --gpt --data-size 32G              # with 32 GB data (exFAT)
+    ./glim-partition.sh /dev/sdX --gpt                                 # GLIM only
+    ./glim-partition.sh /dev/sdX --gpt --data-size 32G                 # with 32 GB data (exFAT)
     ./glim-partition.sh /dev/sdX --gpt --data-size 32G --data-fs ext4  # ext4 data partition
 
 Required packages: `gdisk` (provides `sgdisk`), `dosfstools` (`mkfs.vfat`),
