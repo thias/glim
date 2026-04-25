@@ -1,0 +1,20 @@
+[project]
+name = "glim-tests"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-timeout>=2.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "boot: tests that boot a QEMU VM (slow, require sudo + qemu-system-x86_64)",
+]
+timeout = 120
+# Disk images are too large for tmpfs — use the real filesystem
+addopts = "--basetemp=/var/tmp/glim-tests"
