@@ -85,6 +85,7 @@ The supported `boot/iso/` sub-directories (in alphabetical order) are :
 * [`peppermint`](https://peppermintos.com/)
 * [`popos`](https://pop.system76.com/)
 * [`porteus`](http://www.porteus.org/)
+* [`proxmox`](https://www.proxmox.com/)
 * [`rhel`](https://www.redhat.com/rhel) - _Installation only_
 * [`rockylinux`](https://rockylinux.org/)
 * [`slitaz`](https://slitaz.org/)
